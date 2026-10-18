@@ -24,3 +24,4 @@ jobs:
       - run: pnpm test:e2e
         env: { DATABASE_URL: "postgresql://nutrikids:nutrikids@localhost:5433/nutrikids_test", JWT_ACCESS_SECRET: "test-secret-test-secret-test-secret-123" }
       - run: pnpm --filter api export:openapi && git diff --exit-code packages/contracts/openapi.json
+        env: { DATABASE_URL: "postgresql://nutrikids:nutrikids@localhost:5433/nutrikids_test" }
