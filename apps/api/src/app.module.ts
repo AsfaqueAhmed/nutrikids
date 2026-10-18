@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { FoodModule } from './food/food.module';
+import { ChildModule } from './child/child.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -17,6 +19,8 @@ import { HealthController } from './health/health.controller';
     AuthModule,
     UserModule,
     FoodModule,
+    EventEmitterModule.forRoot(),
+    ChildModule,
   ],
   controllers: [HealthController],
 })
