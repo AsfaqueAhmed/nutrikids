@@ -12,6 +12,8 @@ import { GrowthModule } from './growth/growth.module';
 import { NutritionModule } from './nutrition/nutrition.module';
 import { VaccinationModule } from './vaccination/vaccination.module';
 import { HospitalModule } from './hospital/hospital.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationModule } from './notification/notification.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -31,6 +33,8 @@ import { HealthController } from './health/health.controller';
     NutritionModule,
     VaccinationModule,
     HospitalModule,
+    ScheduleModule.forRoot(),
+    NotificationModule,
   ],
   controllers: [HealthController],
 })
