@@ -1,0 +1,25 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:16
+        env: { POSTGRES_USER: nutrikids, POSTGRES_PASSWORD: nutrikids, POSTGRES_DB: nutrikids_test }
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U nutrikids" --health-interval 2s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter api build
+      - run: pnpm test
+      - run: pnpm --filter api exec prisma migrate deploy
+        env: { DATABASE_URL: "postgresql://nutrikids:nutrikids@localhost:5433/nutrikids_test" }
+      - run: pnpm test:e2e
+        env: { DATABASE_URL: "postgresql://nutrikids:nutrikids@localhost:5433/nutrikids_test", JWT_ACCESS_SECRET: "test-secret-test-secret-test-secret-123" }
+      - run: pnpm --filter api export:openapi && git diff --exit-code packages/contracts/openapi.json
