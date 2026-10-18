@@ -190,6 +190,7 @@ export interface paths {
     get: {
       responses: {
         200: { content: { 'application/json': components['schemas']['Child'][] } };
+        401: { content: { 'application/json': components['schemas']['ApiError'] } };
       };
     };
     post: {
@@ -200,6 +201,8 @@ export interface paths {
       };
       responses: {
         201: { content: { 'application/json': components['schemas']['Child'] } };
+        400: { content: { 'application/json': components['schemas']['ApiError'] } };
+        401: { content: { 'application/json': components['schemas']['ApiError'] } };
       };
     };
   };
@@ -220,12 +223,15 @@ export interface paths {
       };
       responses: {
         200: { content: { 'application/json': components['schemas']['Child'] } };
+        400: { content: { 'application/json': components['schemas']['ApiError'] } };
+        404: { content: { 'application/json': components['schemas']['ApiError'] } };
       };
     };
     delete: {
       parameters: { path: { id: string } };
       responses: {
         204: { content: never };
+        404: { content: { 'application/json': components['schemas']['ApiError'] } };
       };
     };
   };

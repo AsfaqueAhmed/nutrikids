@@ -4,6 +4,8 @@ import { useSession } from '@/features/auth/useSession';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { ChildSwitcher } from '@/features/children/ChildSwitcher';
+import { BottomNav } from '@/components/BottomNav';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, status, logout } = useSession();
@@ -32,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-16">
       {/* Email Verification Banner */}
       {user && !user.emailVerified && (
         <aside
@@ -60,6 +62,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 NutriKids
               </span>
             </Link>
+            <div className="h-5 w-px bg-slate-200 mx-1 hidden sm:block" />
+            <ChildSwitcher />
           </div>
 
           <div className="flex items-center gap-4">
@@ -68,7 +72,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </span>
             <button
               onClick={() => logout()}
-              className="text-xs font-semibold text-slate-600 hover:text-red-600 px-2.5 py-1.5 rounded border border-slate-200 hover:border-red-200 hover:bg-red-50 transition-colors"
+              className="text-xs font-semibold text-slate-600 hover:text-red-600 px-2.5 py-1.5 rounded border border-slate-200 hover:border-red-200 hover:bg-red-50 transition-colors min-h-[36px]"
             >
               Sign out
             </button>
@@ -77,7 +81,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* App Content Body */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 mb-16">{children}</main>
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6">{children}</main>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }
