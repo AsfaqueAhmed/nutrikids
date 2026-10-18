@@ -9,6 +9,7 @@ import { ChildModule } from './child/child.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MealModule } from './meal/meal.module';
 import { GrowthModule } from './growth/growth.module';
+import { NutritionModule } from './nutrition/nutrition.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -25,6 +26,7 @@ import { HealthController } from './health/health.controller';
     ChildModule,
     MealModule,
     GrowthModule,
+    NutritionModule,
   ],
   controllers: [HealthController],
 })
