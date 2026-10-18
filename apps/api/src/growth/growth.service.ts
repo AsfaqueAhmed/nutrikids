@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Child, Gender, GrowthRecord } from '@prisma/client';
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { ageInMonths } from '../common/age';
+import { dataPath } from '../common/data-dir';
 import { ApiError } from '../common/api-error';
 import { resolveLww } from '../common/lww';
 import { ChildAccessService } from '../child/child-access.service';
@@ -30,7 +30,7 @@ const Z_LINES = {
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 
 function loadTables(): WhoTables {
-  const dir = resolve(__dirname, '../../../../data/who');
+  const dir = dataPath('who');
   const t: Record<string, LmsRow[]> = {};
   for (const i of IND)
     for (const g of ['MALE', 'FEMALE'])
