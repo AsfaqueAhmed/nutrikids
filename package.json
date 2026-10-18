@@ -5,7 +5,9 @@
   "scripts": {
     "db:up": "docker compose up -d --wait",
     "api": "pnpm --filter api",
+    "web": "pnpm --filter web",
     "test": "pnpm --filter api test",
+    "test:web": "pnpm --filter web test",
     "test:e2e": "pnpm --filter api test:e2e"
   }
 }
