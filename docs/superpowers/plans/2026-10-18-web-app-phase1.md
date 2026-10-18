@@ -58,7 +58,7 @@ apps/web/
 **Interfaces:**
 - Produces: `api` (an `openapi-fetch` client with a bearer-token middleware and 401 refresh-once), `ApiProblem` (`{ code: string; message: string; details?: unknown; status: number }`), `toProblem(res: Response, body: unknown): ApiProblem`, `isNetworkError(e: unknown): boolean`.
 
-- [ ] **Step 1: Create the app and install dependencies**
+- [x] **Step 1: Create the app and install dependencies**
 
 ```bash
 cd apps && npx create-next-app@15 web --ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-pnpm --no-turbopack && cd ..
@@ -74,7 +74,7 @@ Add scripts to `apps/web/package.json`:
 ```
 Run `pnpm --filter web gen:api`. Expected: `src/lib/api/schema.d.ts` exists and exports `paths`.
 
-- [ ] **Step 2: Failing test for error mapping**
+- [x] **Step 2: Failing test for error mapping**
 
 `apps/web/src/lib/api/errors.test.ts`:
 ```ts
@@ -100,7 +100,7 @@ describe('isNetworkError', () => {
 ```
 Run: `pnpm --filter web test` → FAIL.
 
-- [ ] **Step 3: Implement errors and client**
+- [x] **Step 3: Implement errors and client**
 
 `apps/web/src/lib/api/errors.ts`:
 ```ts
@@ -191,11 +191,11 @@ api.use(auth);
 `apps/web/.env.example`: `NEXT_PUBLIC_API_URL=http://localhost:3000` (use `http://localhost:4010` to run against the Prism mock).
 Run: `pnpm --filter web test` → PASS.
 
-- [ ] **Step 4: Query provider and a smoke page**
+- [x] **Step 4: Query provider and a smoke page**
 
 Create `src/app/providers.tsx` with a `QueryClientProvider` (default `staleTime: 30_000`, `retry: 1`), wrap `layout.tsx` with it. Home page renders "NutriKids". Verify `pnpm --filter web build`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A && git commit -m "feat(web): scaffold, typed API client, token refresh, mock script"
@@ -213,16 +213,16 @@ git add -A && git commit -m "feat(web): scaffold, typed API client, token refres
 - Consumes: `api`, `tokens`, `ApiException`, `toProblem`.
 - Produces: `useSession(): { user: { id; email; role; emailVerified; timezone } | null; status: 'loading' | 'authed' | 'anon'; login(email, password): Promise<void>; register(email, password): Promise<void>; logout(): Promise<void> }`; the `(app)` layout redirects anonymous users to `/login?next=<path>`.
 
-- [ ] **Step 1: Failing test for the session hook**
+- [x] **Step 1: Failing test for the session hook**
 
 `src/features/auth/useSession.test.tsx` (mock `api` with `vi.mock('@/lib/api/client')`): assert (a) with no refresh token the status becomes `anon`; (b) with a refresh token and a successful `/v1/auth/refresh` then `/v1/me`, the status becomes `authed` and `user.email` is set; (c) `logout()` calls `/v1/auth/logout`, clears tokens and sets `anon`. Run → FAIL.
 
-- [ ] **Step 2: Implement `useSession`**
+- [x] **Step 2: Implement `useSession`**
 
 On mount: if there is no refresh token → `anon`. Otherwise call `refreshSession()` then `GET /v1/me`; on failure → `anon`. `login`/`register` call the endpoints, store both tokens via `tokens`, then fetch `/v1/me`. Surface `ApiException` (code `INVALID_CREDENTIALS`, `EMAIL_TAKEN`, validation errors) to the form. `logout` posts the refresh token to `/v1/auth/logout` best-effort, then `tokens.clear()` and clears the query cache and the outbox only after confirming with the user if the outbox is non-empty ("You have unsynced changes. Log out anyway?").
 Run tests → PASS.
 
-- [ ] **Step 3: Screens**
+- [x] **Step 3: Screens**
 
 Build the five public screens with react-hook-form + zod (`email`, password at least 8 chars, confirm on register and reset). Behaviour:
 - Register success → `/onboarding`; show "Check your email to verify your account" banner in the app shell until `emailVerified`. Do not block features on verification.
@@ -231,11 +231,11 @@ Build the five public screens with react-hook-form + zod (`email`, password at l
 - `reset-password?token=` posts the new password, then goes to `/login`.
 - `SocialButtons` renders "Continue with Google" and "Continue with Apple" buttons that obtain an ID token from the provider's JS SDK and post `{ provider, idToken }` to `/v1/auth/social`. Hide a button when its client id env var (`NEXT_PUBLIC_GOOGLE_CLIENT_ID`, `NEXT_PUBLIC_APPLE_CLIENT_ID`) is unset.
 
-- [ ] **Step 4: E2E test (Playwright, runs against the real API)**
+- [x] **Step 4: E2E test (Playwright, runs against the real API)**
 
 `e2e/auth.spec.ts`: register a unique email → lands on `/onboarding`; reload → still signed in (refresh path); log out → `/login`; wrong password shows the API message; visiting `/children/new` while signed out redirects to `/login?next=%2Fchildren%2Fnew`. Run `pnpm --filter web e2e -- auth` → PASS (start the API with `pnpm db:up` and `pnpm api start:dev` first; set `playwright.config.ts` `webServer` to start Next).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A && git commit -m "feat(web): auth screens, session hook, route gate"
@@ -253,20 +253,20 @@ git add -A && git commit -m "feat(web): auth screens, session hook, route gate"
 **Interfaces:**
 - Produces: `useChildren()` (`GET /v1/children`), `useCreateChild()`, `useUpdateChild()`, `useActiveChild(): { child: Child | undefined; setActive(id): void }` (persists the chosen id in `localStorage` key `nk.activeChild`, falls back to the first child), `<ChildSwitcher />` in the header, `<BottomNav />` with Today, Meals, Growth, Vaccines, More.
 
-- [ ] **Step 1: Failing test for `useActiveChild`**
+- [x] **Step 1: Failing test for `useActiveChild`**
 
 Cases: returns the stored child when it still exists; falls back to the first child when the stored id is gone; returns undefined for an empty list. Run → FAIL, implement, run → PASS.
 
-- [ ] **Step 2: Onboarding flow (Step 1 of the BRD flow, required)**
+- [x] **Step 2: Onboarding flow (Step 1 of the BRD flow, required)**
 
 Screen 1: medical disclaimer text (Task 13 copy) with "I understand" checkbox. Screen 2: child name, date of birth (date input, max today), gender, weight (kg, optional). Submit → `POST /v1/children`. Then go to Today. The app must be usable with only these fields.
 - Steps 2–4 of the BRD flow are nudges, not gates: on Today, show dismissible cards "Add height" (until set), "Add allergies" (day 2+, until the child has any allergy or the user taps "No known allergies" which stores a local flag `nk.noAllergies.<childId>`), "Add food dislikes", "Add diet preference". Each card links to the profile editor.
 
-- [ ] **Step 3: Shell**
+- [x] **Step 3: Shell**
 
 Header shows the active child's name and age (`ageMonths` formatted as "9 months" under 24 months, else "3 years 2 months") and the switcher; bottom navigation on phones, left rail at 768 px and above. Empty state when there is no child: single call to action "Add your child".
 
-- [ ] **Step 4: E2E, then commit**
+- [x] **Step 4: E2E, then commit**
 
 `e2e/onboarding.spec.ts`: register → accept disclaimer → create child → Today shows the child's name and the "Add allergies" card is hidden on day 1 but "Add height" is visible. Run → PASS.
 ```bash
