@@ -18,6 +18,8 @@ describe('loadEnv', () => {
   });
 
   it('rejects a missing DATABASE_URL', () => {
-    expect(() => loadEnv({ JWT_ACCESS_SECRET: base.JWT_ACCESS_SECRET })).toThrow();
+    expect(() =>
+      loadEnv({ JWT_ACCESS_SECRET: base.JWT_ACCESS_SECRET }),
+    ).toThrow();
   });
 });

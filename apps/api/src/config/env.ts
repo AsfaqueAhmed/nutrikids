@@ -14,4 +14,5 @@ const schema = z.object({
 });
 
 export type Env = z.infer<typeof schema>;
-export const loadEnv = (raw: NodeJS.ProcessEnv = process.env): Env => schema.parse(raw);
+export const loadEnv = (raw: NodeJS.ProcessEnv = process.env): Env =>
+  schema.parse(raw);

@@ -7,7 +7,9 @@ import { configureApp } from '../src/configure-app';
 describe('health', () => {
   let app: INestApplication;
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    const mod = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
     app = mod.createNestApplication();
     configureApp(app);
     await app.init();
@@ -15,6 +17,7 @@ describe('health', () => {
   afterAll(() => app.close());
 
   it('GET /v1/health', async () => {
-    await request(app.getHttpServer()).get('/v1/health').expect(200, { status: 'ok' });
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    await request(server).get('/v1/health').expect(200, { status: 'ok' });
   });
 });
