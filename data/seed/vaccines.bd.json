@@ -1,0 +1,208 @@
+{
+  "region": "BD",
+  "verified": false,
+  "vaccines": [
+    {
+      "code": "BCG",
+      "name": "BCG",
+      "disease": "Tuberculosis",
+      "description": "Protects against severe forms of tuberculosis in young children.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 0,
+          "minAgeDays": 0,
+          "maxAgeDays": 365,
+          "intervalFromPreviousDays": null,
+          "notes": "At birth, or as soon as possible. Provisional age window."
+        }
+      ]
+    },
+    {
+      "code": "PENTA",
+      "name": "Pentavalent (DPT-HepB-Hib)",
+      "disease": "Diphtheria, tetanus, whooping cough, hepatitis B, Haemophilus influenzae type b",
+      "description": "Combined vaccine protecting against five diseases. Three doses at 6, 10 and 14 weeks.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 42,
+          "minAgeDays": 42,
+          "maxAgeDays": 70,
+          "intervalFromPreviousDays": null,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 2,
+          "suggestedAgeDays": 70,
+          "minAgeDays": 70,
+          "maxAgeDays": 98,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 3,
+          "suggestedAgeDays": 98,
+          "minAgeDays": 98,
+          "maxAgeDays": 126,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        }
+      ]
+    },
+    {
+      "code": "OPV",
+      "name": "OPV (oral polio vaccine)",
+      "disease": "Polio",
+      "description": "Oral polio vaccine, three doses at 6, 10 and 14 weeks.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 42,
+          "minAgeDays": 42,
+          "maxAgeDays": 70,
+          "intervalFromPreviousDays": null,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 2,
+          "suggestedAgeDays": 70,
+          "minAgeDays": 70,
+          "maxAgeDays": 98,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 3,
+          "suggestedAgeDays": 98,
+          "minAgeDays": 98,
+          "maxAgeDays": 126,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        }
+      ]
+    },
+    {
+      "code": "PCV",
+      "name": "PCV (pneumococcal conjugate vaccine)",
+      "disease": "Pneumococcal disease (pneumonia, meningitis)",
+      "description": "Protects against pneumococcal disease. Three doses at 6, 10 and 14 weeks.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 42,
+          "minAgeDays": 42,
+          "maxAgeDays": 70,
+          "intervalFromPreviousDays": null,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 2,
+          "suggestedAgeDays": 70,
+          "minAgeDays": 70,
+          "maxAgeDays": 98,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 3,
+          "suggestedAgeDays": 98,
+          "minAgeDays": 98,
+          "maxAgeDays": 126,
+          "intervalFromPreviousDays": 28,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        }
+      ]
+    },
+    {
+      "code": "FIPV",
+      "name": "fIPV (fractional inactivated polio vaccine)",
+      "disease": "Polio",
+      "description": "Injectable polio vaccine, two doses at 6 and 14 weeks.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 42,
+          "minAgeDays": 42,
+          "maxAgeDays": 70,
+          "intervalFromPreviousDays": null,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 2,
+          "suggestedAgeDays": 98,
+          "minAgeDays": 98,
+          "maxAgeDays": 126,
+          "intervalFromPreviousDays": 56,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        }
+      ]
+    },
+    {
+      "code": "MR",
+      "name": "MR (measles-rubella)",
+      "disease": "Measles, rubella",
+      "description": "Two doses, at 9 months and 15 months.",
+      "availability": "GOVERNMENT_FREE",
+      "isMandatory": true,
+      "priceMinBdt": null,
+      "priceMaxBdt": null,
+      "priceNote": null,
+      "priceUpdatedAt": null,
+      "sourceNote": "Secondary sources checked 2026-10-18, agreeing on the schedule: doctorsfindbd.com 'Child Vaccination Schedule in Bangladesh: EPI Guide' (cites WHO EPI Factsheet Bangladesh and DGHS EPI) and chamberbd.com 'Child Vaccination: EPI Schedule for Bangladesh'. The official DGHS/WHO document could not be retrieved (WHO IRIS returned 403). Verify against the current DGHS EPI card. Age windows (min/max) are provisional, derived from the suggested ages; they are not from an official source.",
+      "schedule": [
+        {
+          "doseNumber": 1,
+          "suggestedAgeDays": 274,
+          "minAgeDays": 274,
+          "maxAgeDays": 455,
+          "intervalFromPreviousDays": null,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        },
+        {
+          "doseNumber": 2,
+          "suggestedAgeDays": 456,
+          "minAgeDays": 456,
+          "maxAgeDays": 730,
+          "intervalFromPreviousDays": 182,
+          "notes": "Provisional age window; continue the schedule if a dose is missed (do not restart)."
+        }
+      ]
+    }
+  ]
+}

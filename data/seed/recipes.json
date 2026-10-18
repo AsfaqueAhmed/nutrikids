@@ -1,0 +1,111 @@
+{
+  "verified": false,
+  "recipes": [
+    {
+      "name": "Khichuri (rice and lentils)",
+      "instructions": "Cook rice and lentils together until very soft. Serve warm; no added salt for under-ones.",
+      "prepMinutes": 30,
+      "ageMinMonths": 8,
+      "ageMaxMonths": 144,
+      "slots": [
+        "LUNCH",
+        "DINNER"
+      ],
+      "suitableDiets": [
+        "NON_VEGETARIAN",
+        "VEGETARIAN",
+        "VEGAN",
+        "PESCATARIAN"
+      ],
+      "foods": [
+        {
+          "food": "Rice, white, cooked",
+          "quantityG": 100
+        },
+        {
+          "food": "Lentils, cooked",
+          "quantityG": 60
+        }
+      ]
+    },
+    {
+      "name": "Egg and potato mash",
+      "instructions": "Mash boiled potato with chopped hard-boiled egg until smooth.",
+      "prepMinutes": 15,
+      "ageMinMonths": 8,
+      "ageMaxMonths": 144,
+      "slots": [
+        "BREAKFAST",
+        "LUNCH"
+      ],
+      "suitableDiets": [
+        "NON_VEGETARIAN",
+        "VEGETARIAN",
+        "PESCATARIAN"
+      ],
+      "foods": [
+        {
+          "food": "Egg, hard-boiled",
+          "quantityG": 50
+        },
+        {
+          "food": "Potato, boiled",
+          "quantityG": 100
+        }
+      ]
+    },
+    {
+      "name": "Chicken rice with spinach",
+      "instructions": "Shred cooked chicken, mix with soft rice and finely chopped cooked spinach.",
+      "prepMinutes": 25,
+      "ageMinMonths": 8,
+      "ageMaxMonths": 144,
+      "slots": [
+        "LUNCH",
+        "DINNER"
+      ],
+      "suitableDiets": [
+        "NON_VEGETARIAN"
+      ],
+      "foods": [
+        {
+          "food": "Chicken breast, cooked",
+          "quantityG": 40
+        },
+        {
+          "food": "Rice, white, cooked",
+          "quantityG": 100
+        },
+        {
+          "food": "Spinach, cooked",
+          "quantityG": 30
+        }
+      ]
+    },
+    {
+      "name": "Fish and potato mash",
+      "instructions": "Flake cooked fish (check carefully for bones) and mash with boiled potato.",
+      "prepMinutes": 20,
+      "ageMinMonths": 8,
+      "ageMaxMonths": 144,
+      "slots": [
+        "LUNCH",
+        "DINNER"
+      ],
+      "suitableDiets": [
+        "NON_VEGETARIAN",
+        "PESCATARIAN"
+      ],
+      "foods": [
+        {
+          "food": "Tilapia, cooked",
+          "quantityG": 40
+        },
+        {
+          "food": "Potato, boiled",
+          "quantityG": 100
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "verified": false,
+  "source": "USDA FoodData Central, SR Legacy (public domain), per 100 g edible portion, retrieved 2026-10-18 via api.nal.usda.gov; fdcId recorded per food. Vitamin A is RAE (ug), vitamin D in ug. Not a Bangladesh food composition table: replace or supplement with local data before launch.",
+  "foods": [
+    {
+      "name": "Rice, white, cooked",
+      "category": "Grains",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 130.0,
+        "protein": 2.69,
+        "carbs": 28.17,
+        "fat": 0.28,
+        "fiber": 0.4,
+        "iron": 1.2,
+        "calcium": 10.0,
+        "vitaminA": 0.0,
+        "vitaminC": 0.0,
+        "vitaminD": 0.0,
+        "zinc": 0.49
+      },
+      "fdcId": 168878,
+      "fdcDescription": "Rice, white, long-grain, regular, enriched, cooked"
+    },
+    {
+      "name": "Lentils, cooked",
+      "category": "Pulses",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 116.0,
+        "protein": 9.02,
+        "carbs": 20.13,
+        "fat": 0.38,
+        "fiber": 7.9,
+        "iron": 3.33,
+        "calcium": 19.0,
+        "vitaminA": 0.0,
+        "vitaminC": 1.5,
+        "vitaminD": 0.0,
+        "zinc": 1.27
+      },
+      "fdcId": 172421,
+      "fdcDescription": "Lentils, mature seeds, cooked, boiled, without salt"
+    },
+    {
+      "name": "Egg, hard-boiled",
+      "category": "Protein",
+      "allergens": [
+        "EGG"
+      ],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 155.0,
+        "protein": 12.58,
+        "carbs": 1.12,
+        "fat": 10.61,
+        "fiber": 0.0,
+        "iron": 1.19,
+        "calcium": 50.0,
+        "vitaminA": 149.0,
+        "vitaminC": 0.0,
+        "vitaminD": 2.2,
+        "zinc": 1.05
+      },
+      "fdcId": 173424,
+      "fdcDescription": "Egg, whole, cooked, hard-boiled"
+    },
+    {
+      "name": "Chicken breast, cooked",
+      "category": "Protein",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 165.0,
+        "protein": 31.02,
+        "carbs": 0.0,
+        "fat": 3.57,
+        "fiber": 0.0,
+        "iron": 1.04,
+        "calcium": 15.0,
+        "vitaminA": 6.0,
+        "vitaminC": 0.0,
+        "vitaminD": 0.1,
+        "zinc": 1.0
+      },
+      "fdcId": 171477,
+      "fdcDescription": "Chicken, broilers or fryers, breast, meat only, cooked, roasted"
+    },
+    {
+      "name": "Tilapia, cooked",
+      "category": "Fish",
+      "allergens": [
+        "FISH"
+      ],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 128.0,
+        "protein": 26.15,
+        "carbs": 0.0,
+        "fat": 2.65,
+        "fiber": 0.0,
+        "iron": 0.69,
+        "calcium": 14.0,
+        "vitaminA": 0.0,
+        "vitaminC": 0.0,
+        "vitaminD": 3.7,
+        "zinc": 0.41
+      },
+      "fdcId": 175177,
+      "fdcDescription": "Fish, tilapia, cooked, dry heat"
+    },
+    {
+      "name": "Milk, whole",
+      "category": "Dairy",
+      "allergens": [
+        "MILK"
+      ],
+      "ageMinMonths": 12,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 61.0,
+        "protein": 3.15,
+        "carbs": 4.8,
+        "fat": 3.25,
+        "fiber": 0.0,
+        "iron": 0.03,
+        "calcium": 113.0,
+        "vitaminA": 46.0,
+        "vitaminC": 0.0,
+        "vitaminD": 1.3,
+        "zinc": 0.37
+      },
+      "fdcId": 171265,
+      "fdcDescription": "Milk, whole, 3.25% milkfat, with added vitamin D"
+    },
+    {
+      "name": "Banana, raw",
+      "category": "Fruit",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 89.0,
+        "protein": 1.09,
+        "carbs": 22.84,
+        "fat": 0.33,
+        "fiber": 2.6,
+        "iron": 0.26,
+        "calcium": 5.0,
+        "vitaminA": 3.0,
+        "vitaminC": 8.7,
+        "vitaminD": 0.0,
+        "zinc": 0.15
+      },
+      "fdcId": 173944,
+      "fdcDescription": "Bananas, raw"
+    },
+    {
+      "name": "Potato, boiled",
+      "category": "Vegetables",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 86.0,
+        "protein": 1.71,
+        "carbs": 20.01,
+        "fat": 0.1,
+        "fiber": 1.8,
+        "iron": 0.31,
+        "calcium": 8.0,
+        "vitaminA": 0.0,
+        "vitaminC": 7.4,
+        "vitaminD": 0.0,
+        "zinc": 0.27
+      },
+      "fdcId": 170440,
+      "fdcDescription": "Potatoes, boiled, cooked without skin, flesh, without salt"
+    },
+    {
+      "name": "Spinach, cooked",
+      "category": "Vegetables",
+      "allergens": [],
+      "ageMinMonths": 6,
+      "ageMaxMonths": 144,
+      "nutrition": {
+        "calories": 23.0,
+        "protein": 2.97,
+        "carbs": 3.75,
+        "fat": 0.26,
+        "fiber": 2.4,
+        "iron": 3.57,
+        "calcium": 136.0,
+        "vitaminA": 524.0,
+        "vitaminC": 9.8,
+        "vitaminD": 0.0,
+        "zinc": 0.76
+      },
+      "fdcId": 168463,
+      "fdcDescription": "Spinach, cooked, boiled, drained, without salt"
+    }
+  ]
+}
