@@ -1,4 +1,6 @@
 import { INestApplication, Type } from '@nestjs/common';
+import request from 'supertest';
+import { App } from 'supertest/types';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
@@ -23,4 +25,19 @@ export async function resetDb(prisma: PrismaService): Promise<void> {
   if (rows.length === 0) return;
   const list = rows.map((r) => `"${r.tablename}"`).join(', ');
   await prisma.$executeRawUnsafe(`TRUNCATE ${list} RESTART IDENTITY CASCADE`);
+}
+
+export async function registerAndLogin(
+  app: INestApplication,
+  email = 'parent@example.com',
+) {
+  const res = await request(app.getHttpServer() as App)
+    .post('/v1/auth/register')
+    .send({ email, password: 'password123' })
+    .expect(201);
+  const { accessToken } = res.body as { accessToken: string };
+  const me = await request(app.getHttpServer() as App)
+    .get('/v1/me')
+    .set('Authorization', `Bearer ${accessToken}`);
+  return { token: accessToken, userId: (me.body as { id: string }).id };
 }
