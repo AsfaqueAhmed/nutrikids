@@ -272,7 +272,67 @@
     "/v1/foods": {
       "get": {
         "operationId": "FoodController_list",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeAllergens",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "MILK",
+                  "EGG",
+                  "PEANUT",
+                  "TREE_NUT",
+                  "WHEAT",
+                  "SOY",
+                  "FISH",
+                  "SHELLFISH",
+                  "SESAME"
+                ]
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -685,6 +745,30 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedSince",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -805,6 +889,30 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedSince",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -898,6 +1006,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "from",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -946,7 +1070,31 @@
     "/v1/recipes": {
       "get": {
         "operationId": "RecipeController_list",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "slot",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BREAKFAST",
+                "LUNCH",
+                "MORNING_SNACK",
+                "AFTERNOON_SNACK",
+                "DINNER"
+              ]
+            }
+          },
+          {
+            "name": "maxAgeMonths",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -1135,6 +1283,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "updatedSince",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1204,6 +1360,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1224,6 +1388,14 @@
             "name": "childId",
             "required": true,
             "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "weekStart",
+            "required": true,
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -1263,6 +1435,21 @@
             "in": "path",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "UPCOMING",
+                "DUE",
+                "OVERDUE",
+                "GIVEN",
+                "GIVEN_LATE"
+              ]
             }
           }
         ],
@@ -1343,7 +1530,58 @@
     "/v1/hospitals/nearby": {
       "get": {
         "operationId": "HospitalController_nearby",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "radiusKm",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0.1,
+              "maximum": 500,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -90,
+              "maximum": 90,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -180,
+              "maximum": 180,
+              "type": "number"
+            }
+          },
+          {
+            "name": "service",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -1559,115 +1797,830 @@
     "schemas": {
       "RegisterDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "LoginDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "RefreshDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
       },
       "TokenDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ]
       },
       "ForgotDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
       },
       "ResetDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ]
       },
       "SocialDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": [
+              "google",
+              "apple"
+            ]
+          },
+          "idToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "idToken"
+        ]
       },
       "UpdateMeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "timezone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "timezone"
+        ]
       },
       "CreateFoodDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "allergens": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MILK",
+                "EGG",
+                "PEANUT",
+                "TREE_NUT",
+                "WHEAT",
+                "SOY",
+                "FISH",
+                "SHELLFISH",
+                "SESAME"
+              ]
+            }
+          },
+          "nutrition": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "category",
+          "nutrition"
+        ]
       },
       "UpdateFoodDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "allergens": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MILK",
+                "EGG",
+                "PEANUT",
+                "TREE_NUT",
+                "WHEAT",
+                "SOY",
+                "FISH",
+                "SHELLFISH",
+                "SESAME"
+              ]
+            }
+          },
+          "nutrition": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
       },
       "CreateChildDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE"
+            ]
+          },
+          "heightCm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 250
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 200
+          },
+          "activityLevel": {
+            "type": "string",
+            "enum": [
+              "SEDENTARY",
+              "MODERATE",
+              "ACTIVE"
+            ]
+          },
+          "dietType": {
+            "type": "string",
+            "enum": [
+              "NON_VEGETARIAN",
+              "VEGETARIAN",
+              "VEGAN",
+              "PESCATARIAN"
+            ]
+          },
+          "photoUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "dateOfBirth",
+          "gender"
+        ]
       },
       "UpdateChildDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE"
+            ]
+          },
+          "heightCm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 250
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 200
+          },
+          "activityLevel": {
+            "type": "string",
+            "enum": [
+              "SEDENTARY",
+              "MODERATE",
+              "ACTIVE"
+            ]
+          },
+          "dietType": {
+            "type": "string",
+            "enum": [
+              "NON_VEGETARIAN",
+              "VEGETARIAN",
+              "VEGAN",
+              "PESCATARIAN"
+            ]
+          },
+          "photoUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "AllergyDto": {
+        "type": "object",
+        "properties": {
+          "allergen": {
+            "type": "string",
+            "enum": [
+              "MILK",
+              "EGG",
+              "PEANUT",
+              "TREE_NUT",
+              "WHEAT",
+              "SOY",
+              "FISH",
+              "SHELLFISH",
+              "SESAME"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "MODERATE",
+              "MILD",
+              "SEVERE"
+            ]
+          }
+        },
+        "required": [
+          "allergen",
+          "severity"
+        ]
       },
       "AllergiesBody": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllergyDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
       },
       "ConditionsDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "names": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "names"
+        ]
       },
       "DislikesDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "foodIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "foodIds"
+        ]
       },
       "FeedingLogDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "BREAST",
+              "FORMULA",
+              "SOLID"
+            ]
+          },
+          "at": {
+            "type": "string"
+          },
+          "durationMinutes": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 600
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "at",
+          "clientUpdatedAt"
+        ]
       },
       "FoodIntroductionDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "foodId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "introducedOn": {
+            "type": "string"
+          },
+          "reaction": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "foodId",
+          "introducedOn",
+          "clientUpdatedAt"
+        ]
       },
       "GenerateDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "CUSTOM"
+            ]
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate",
+          "type"
+        ]
       },
       "EntryDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "string",
+            "enum": [
+              "BREAKFAST",
+              "LUNCH",
+              "MORNING_SNACK",
+              "AFTERNOON_SNACK",
+              "DINNER"
+            ]
+          },
+          "recipeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "portion": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 3
+          },
+          "confirmAllergen": {
+            "type": "boolean"
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "slot",
+          "recipeId",
+          "clientUpdatedAt"
+        ]
       },
       "CheckDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "weekStart": {
+            "type": "string"
+          },
+          "foodId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "checked": {
+            "type": "boolean"
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "weekStart",
+          "foodId",
+          "checked",
+          "clientUpdatedAt"
+        ]
+      },
+      "RecipeFoodDto": {
+        "type": "object",
+        "properties": {
+          "foodId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantityG": {
+            "type": "number",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "foodId",
+          "quantityG"
+        ]
       },
       "RecipeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "prepMinutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "slots": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "BREAKFAST",
+                "LUNCH",
+                "MORNING_SNACK",
+                "AFTERNOON_SNACK",
+                "DINNER"
+              ]
+            }
+          },
+          "suitableDiets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "NON_VEGETARIAN",
+                "VEGETARIAN",
+                "VEGAN",
+                "PESCATARIAN"
+              ]
+            }
+          },
+          "foods": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeFoodDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "instructions",
+          "prepMinutes",
+          "ageMinMonths",
+          "ageMaxMonths",
+          "slots",
+          "suitableDiets",
+          "foods"
+        ]
       },
       "UpdateRecipeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "prepMinutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "minimum": 0
+          },
+          "slots": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "BREAKFAST",
+                "LUNCH",
+                "MORNING_SNACK",
+                "AFTERNOON_SNACK",
+                "DINNER"
+              ]
+            }
+          },
+          "suitableDiets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "NON_VEGETARIAN",
+                "VEGETARIAN",
+                "VEGAN",
+                "PESCATARIAN"
+              ]
+            }
+          },
+          "foods": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeFoodDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "instructions",
+          "prepMinutes",
+          "ageMinMonths",
+          "ageMaxMonths",
+          "slots",
+          "suitableDiets",
+          "foods"
+        ]
       },
       "GrowthDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "heightCm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 250
+          },
+          "weightKg": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 200
+          },
+          "headCircumferenceCm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 70
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "clientUpdatedAt"
+        ]
       },
       "UpdateDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "givenDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "facilityName": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "paidType": {
+            "type": "string",
+            "enum": [
+              "GOVERNMENT",
+              "PRIVATE"
+            ]
+          },
+          "amountPaidBdt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "batchNo": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "cardPhotoUrl": {
+            "type": "string"
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "givenDate",
+          "clientUpdatedAt"
+        ]
+      },
+      "KeysDto": {
+        "type": "object",
+        "properties": {
+          "p256dh": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "p256dh",
+          "auth"
+        ]
       },
       "SubscribeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "keys": {
+            "$ref": "#/components/schemas/KeysDto"
+          }
+        },
+        "required": [
+          "endpoint",
+          "keys"
+        ]
       },
       "UnsubscribeDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpoint"
+        ]
       },
       "PreferenceDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "timeOfDay": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
       },
       "MealReminderDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "timeOfDay": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "timeOfDay",
+          "enabled"
+        ]
       }
     }
   }

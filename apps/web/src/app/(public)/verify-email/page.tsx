@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api/client';
+import { toProblem } from '@/lib/api/errors';
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
@@ -23,9 +24,11 @@ function VerifyEmailContent() {
         const res = await api.POST('/v1/auth/verify-email', {
           body: { token },
         });
-        if (res.error) {
+        if (!res.response.ok) {
           setStatus('error');
-          setMessage(res.error.message || 'Verification link expired or already used.');
+          setMessage(
+            toProblem(res.response, res.error).message || 'Verification link expired or already used.',
+          );
         } else {
           setStatus('success');
           setMessage('Your email has been verified successfully!');

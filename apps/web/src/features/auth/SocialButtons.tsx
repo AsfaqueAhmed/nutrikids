@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { api } from '@/lib/api/client';
 import { tokens } from '@/lib/api/auth';
+import { unwrap } from '@/lib/api/unwrap';
+import type { TokenPair } from '@/lib/api/models';
 import { useRouter } from 'next/navigation';
 
 export function SocialButtons() {
@@ -24,11 +26,10 @@ export function SocialButtons() {
       const res = await api.POST('/v1/auth/social', {
         body: { provider, idToken },
       });
-      if (res.data) {
-        tokens.setAccess(res.data.accessToken);
-        tokens.setRefresh(res.data.refreshToken);
-        router.push('/');
-      }
+      const pair = unwrap<TokenPair>(res);
+      tokens.setAccess(pair.accessToken);
+      tokens.setRefresh(pair.refreshToken);
+      router.push('/');
     } catch {
       setError(`Failed to sign in with ${provider}. Please try again.`);
     }

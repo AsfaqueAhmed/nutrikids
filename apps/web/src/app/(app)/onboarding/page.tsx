@@ -5,29 +5,26 @@ import { useRouter } from 'next/navigation';
 import { Disclaimer } from '@/components/Disclaimer';
 import { ChildForm } from '@/features/children/ChildForm';
 import { useChildren, CreateChildDto } from '@/features/children/useChildren';
-import { api } from '@/lib/api/client';
+import type { Allergy } from '@/lib/api/models';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { createChild } = useChildren();
+  const { createChild, saveExtras } = useChildren();
   const [step, setStep] = useState<1 | 2>(1);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleCreateChild = async (
     dto: CreateChildDto,
-    allergies: { allergenTag: string; severity: 'mild' | 'moderate' | 'severe' }[]
+    allergies: Allergy[],
+    dislikeFoodIds: string[],
   ) => {
     setErrorMsg(null);
     try {
       const created = await createChild(dto);
 
-      // Save allergies if any
-      for (const a of allergies) {
-        await api.POST('/v1/children/{id}/allergies', {
-          params: { path: { id: created.id } },
-          body: a,
-        });
+      if (allergies.length || dislikeFoodIds.length) {
+        await saveExtras({ id: created.id, allergies, dislikeFoodIds });
       }
 
       router.push('/');

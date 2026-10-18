@@ -1,7 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { mkdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
+
+/** Repo root = nearest ancestor with pnpm-workspace.yaml, so this works from scripts/ and dist/scripts/. */
+function repoRoot(): string {
+  let dir = __dirname;
+  while (!existsSync(resolve(dir, 'pnpm-workspace.yaml'))) {
+    const parent = dirname(dir);
+    if (parent === dir) throw new Error('Cannot find the repo root');
+    dir = parent;
+  }
+  return dir;
+}
 
 async function main() {
   process.env.DATABASE_URL ??=
@@ -25,7 +36,7 @@ async function main() {
     .addBearerAuth()
     .build();
   const doc = SwaggerModule.createDocument(app, config);
-  const out = resolve(__dirname, '../../../packages/contracts/openapi.json');
+  const out = resolve(repoRoot(), 'packages/contracts/openapi.json');
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(doc, null, 2) + '\n');
   await app.close();

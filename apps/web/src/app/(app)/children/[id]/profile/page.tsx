@@ -2,9 +2,10 @@
 
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useChildren, Child } from '@/features/children/useChildren';
-import { ChildForm, ChildFormValues } from '@/features/children/ChildForm';
-import { api } from '@/lib/api/client';
+import { useChildren, type Child, type UpdateChildDto } from '@/features/children/useChildren';
+import { ChildForm } from '@/features/children/ChildForm';
+import type { Allergy } from '@/lib/api/models';
+import { useFoodsByIds } from '@/features/children/useFoodSearch';
 import Link from 'next/link';
 
 export default function ChildProfilePage({
@@ -15,9 +16,10 @@ export default function ChildProfilePage({
   const resolvedParams = use(params);
   const childId = resolvedParams.id;
   const router = useRouter();
-  const { children, updateChild, deleteChild } = useChildren();
+  const { children, updateChild, saveExtras, deleteChild } = useChildren();
   const [child, setChild] = useState<Child | null>(null);
   const [successMsg, setSuccessMsg] = useState(false);
+  const { foods: dislikedFoods, isLoading: loadingDislikes } = useFoodsByIds(child?.dislikes ?? []);
 
   useEffect(() => {
     const found = children.find((c) => c.id === childId);
@@ -26,7 +28,7 @@ export default function ChildProfilePage({
     }
   }, [children, childId]);
 
-  if (!child) {
+  if (!child || loadingDislikes) {
     return (
       <div className="max-w-2xl mx-auto py-10 text-center">
         <p className="text-sm text-slate-500">Loading child profile...</p>
@@ -35,16 +37,12 @@ export default function ChildProfilePage({
   }
 
   const handleUpdate = async (
-    values: Partial<ChildFormValues>,
-    allergies: { allergenTag: string; severity: 'mild' | 'moderate' | 'severe' }[]
+    values: UpdateChildDto,
+    allergies: Allergy[],
+    dislikeFoodIds: string[],
   ) => {
     await updateChild({ id: childId, dto: values });
-    for (const a of allergies) {
-      await api.POST('/v1/children/{id}/allergies', {
-        params: { path: { id: childId } },
-        body: a,
-      });
-    }
+    await saveExtras({ id: childId, allergies, dislikeFoodIds });
     setSuccessMsg(true);
     setTimeout(() => setSuccessMsg(false), 3000);
   };
@@ -87,11 +85,13 @@ export default function ChildProfilePage({
           name: child.name,
           dateOfBirth: child.dateOfBirth,
           gender: child.gender,
-          heightCm: child.heightCm,
-          weightKg: child.weightKg,
+          heightCm: child.heightCm ?? undefined,
+          weightKg: child.weightKg ?? undefined,
           activityLevel: child.activityLevel,
           dietType: child.dietType,
         }}
+        initialAllergies={child.allergies}
+        initialDislikes={dislikedFoods}
         onSubmit={handleUpdate}
         submitLabel="Update Child Profile"
       />

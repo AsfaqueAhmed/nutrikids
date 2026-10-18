@@ -5,7 +5,18 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AllergyBadge } from '@/components/AllergyBadge';
+import {
+  ACTIVITY_LEVELS,
+  ALLERGENS,
+  DIET_TYPES,
+  GENDERS,
+  SEVERITIES,
+  type Allergen,
+  type Severity,
+} from '@/lib/api/domain';
+import type { Allergy, Food } from '@/lib/api/models';
 import type { CreateChildDto } from './useChildren';
+import { useFoodSearch } from './useFoodSearch';
 
 export const childSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -13,34 +24,37 @@ export const childSchema = z.object({
     const d = new Date(val);
     return !isNaN(d.getTime()) && d <= new Date();
   }, 'Birth date cannot be in the future'),
-  gender: z.enum(['male', 'female', 'other']),
+  gender: z.enum(['MALE', 'FEMALE']),
   heightCm: z.number().min(30, 'Height must be at least 30 cm').max(200, 'Height must be under 200 cm'),
   weightKg: z.number().min(1, 'Weight must be at least 1 kg').max(150, 'Weight must be under 150 kg'),
-  activityLevel: z.enum(['sedentary', 'moderate', 'active']),
-  dietType: z.string().min(1, 'Diet type is required'),
+  activityLevel: z.enum(['SEDENTARY', 'MODERATE', 'ACTIVE']),
+  dietType: z.enum(['NON_VEGETARIAN', 'VEGETARIAN', 'VEGAN', 'PESCATARIAN']),
 });
 
 export type ChildFormValues = z.infer<typeof childSchema>;
 
 export interface ChildFormProps {
   initialValues?: Partial<ChildFormValues>;
-  onSubmit: (values: CreateChildDto, allergies: { allergenTag: string; severity: 'mild' | 'moderate' | 'severe' }[], dislikes: string[]) => Promise<void>;
+  initialAllergies?: Allergy[];
+  initialDislikes?: Pick<Food, 'id' | 'name'>[];
+  onSubmit: (values: CreateChildDto, allergies: Allergy[], dislikeFoodIds: string[]) => Promise<void>;
   submitLabel?: string;
 }
 
 export function ChildForm({
   initialValues,
+  initialAllergies = [],
+  initialDislikes = [],
   onSubmit,
   submitLabel = 'Save Child Profile',
 }: ChildFormProps) {
-  const [allergies, setAllergies] = useState<
-    { allergenTag: string; severity: 'mild' | 'moderate' | 'severe' }[]
-  >([]);
-  const [newAllergen, setNewAllergen] = useState('');
-  const [newSeverity, setNewSeverity] = useState<'mild' | 'moderate' | 'severe'>('moderate');
+  const [allergies, setAllergies] = useState<Allergy[]>(initialAllergies);
+  const [newAllergen, setNewAllergen] = useState<Allergen>('MILK');
+  const [newSeverity, setNewSeverity] = useState<Severity>('MODERATE');
 
-  const [dislikes, setDislikes] = useState<string[]>([]);
-  const [newDislike, setNewDislike] = useState('');
+  const [dislikes, setDislikes] = useState<Pick<Food, 'id' | 'name'>[]>(initialDislikes);
+  const [dislikeSearch, setDislikeSearch] = useState('');
+  const foodResults = useFoodSearch(dislikeSearch);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -54,11 +68,11 @@ export function ChildForm({
     defaultValues: {
       name: initialValues?.name || '',
       dateOfBirth: initialValues?.dateOfBirth || new Date().toISOString().split('T')[0],
-      gender: initialValues?.gender || 'female',
+      gender: initialValues?.gender || 'FEMALE',
       heightCm: initialValues?.heightCm || 85,
       weightKg: initialValues?.weightKg || 12,
-      activityLevel: initialValues?.activityLevel || 'moderate',
-      dietType: initialValues?.dietType || 'omnivore',
+      activityLevel: initialValues?.activityLevel || 'MODERATE',
+      dietType: initialValues?.dietType || 'NON_VEGETARIAN',
     },
   });
 
@@ -77,35 +91,29 @@ export function ChildForm({
   }, [dob]);
 
   const handleAddAllergy = () => {
-    if (!newAllergen.trim()) return;
-    const tag = newAllergen.trim().toLowerCase();
-    if (!allergies.some((a) => a.allergenTag === tag)) {
-      setAllergies([...allergies, { allergenTag: tag, severity: newSeverity }]);
+    // one entry per allergen: re-adding replaces the severity
+    setAllergies([...allergies.filter((a) => a.allergen !== newAllergen), { allergen: newAllergen, severity: newSeverity }]);
+  };
+
+  const handleRemoveAllergy = (allergen: Allergen) => {
+    setAllergies(allergies.filter((a) => a.allergen !== allergen));
+  };
+
+  const handleAddDislike = (food: Pick<Food, 'id' | 'name'>) => {
+    if (!dislikes.some((d) => d.id === food.id)) {
+      setDislikes([...dislikes, { id: food.id, name: food.name }]);
     }
-    setNewAllergen('');
+    setDislikeSearch('');
   };
 
-  const handleRemoveAllergy = (tag: string) => {
-    setAllergies(allergies.filter((a) => a.allergenTag !== tag));
-  };
-
-  const handleAddDislike = () => {
-    if (!newDislike.trim()) return;
-    const food = newDislike.trim();
-    if (!dislikes.includes(food)) {
-      setDislikes([...dislikes, food]);
-    }
-    setNewDislike('');
-  };
-
-  const handleRemoveDislike = (food: string) => {
-    setDislikes(dislikes.filter((d) => d !== food));
+  const handleRemoveDislike = (id: string) => {
+    setDislikes(dislikes.filter((d) => d.id !== id));
   };
 
   const onFormSubmit = async (values: ChildFormValues) => {
     setErrorMsg(null);
     try {
-      await onSubmit(values, allergies, dislikes);
+      await onSubmit(values, allergies, dislikes.map((d) => d.id));
     } catch (err: unknown) {
       if (err instanceof Error) {
         setErrorMsg(err.message);
@@ -177,9 +185,11 @@ export function ChildForm({
               {...register('gender')}
               className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-emerald-600 focus:outline-none min-h-[44px]"
             >
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="other">Other</option>
+              {GENDERS.map((g) => (
+                <option key={g.value} value={g.value}>
+                  {g.label}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -226,9 +236,11 @@ export function ChildForm({
               {...register('activityLevel')}
               className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-emerald-600 focus:outline-none min-h-[44px]"
             >
-              <option value="sedentary">Sedentary (quiet play)</option>
-              <option value="moderate">Moderate (regular active play)</option>
-              <option value="active">Active (very high energy / sports)</option>
+              {ACTIVITY_LEVELS.map((a) => (
+                <option key={a.value} value={a.value}>
+                  {a.label}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -241,11 +253,11 @@ export function ChildForm({
               {...register('dietType')}
               className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-emerald-600 focus:outline-none min-h-[44px]"
             >
-              <option value="omnivore">Standard / Omnivore</option>
-              <option value="vegetarian">Vegetarian</option>
-              <option value="vegan">Vegan</option>
-              <option value="halal">Halal</option>
-              <option value="kosher">Kosher</option>
+              {DIET_TYPES.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -266,31 +278,39 @@ export function ChildForm({
           ) : (
             allergies.map((a) => (
               <AllergyBadge
-                key={a.allergenTag}
-                allergen={a.allergenTag}
+                key={a.allergen}
+                allergen={a.allergen}
                 severity={a.severity}
-                onRemove={() => handleRemoveAllergy(a.allergenTag)}
+                onRemove={() => handleRemoveAllergy(a.allergen)}
               />
             ))
           )}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-100">
-          <input
-            type="text"
-            placeholder="e.g. peanut, dairy, egg, gluten"
+          <select
             value={newAllergen}
-            onChange={(e) => setNewAllergen(e.target.value)}
+            onChange={(e) => setNewAllergen(e.target.value as Allergen)}
+            aria-label="Allergen"
             className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 min-h-[40px] focus:outline-none focus:border-emerald-600"
-          />
+          >
+            {ALLERGENS.map((a) => (
+              <option key={a.value} value={a.value}>
+                {a.label}
+              </option>
+            ))}
+          </select>
           <select
             value={newSeverity}
-            onChange={(e) => setNewSeverity(e.target.value as 'mild' | 'moderate' | 'severe')}
+            onChange={(e) => setNewSeverity(e.target.value as Severity)}
+            aria-label="Severity"
             className="px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 min-h-[40px] focus:outline-none focus:border-emerald-600"
           >
-            <option value="mild">Mild (Warning)</option>
-            <option value="moderate">Moderate (Confirmation)</option>
-            <option value="severe">Severe (Hard Block)</option>
+            {SEVERITIES.map((v) => (
+              <option key={v.value} value={v.value}>
+                {v.label}
+              </option>
+            ))}
           </select>
           <button
             type="button"
@@ -317,13 +337,13 @@ export function ChildForm({
           ) : (
             dislikes.map((d) => (
               <span
-                key={d}
+                key={d.id}
                 className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 border border-slate-300 rounded-md text-xs font-medium text-slate-700"
               >
-                <span>{d}</span>
+                <span>{d.name}</span>
                 <button
                   type="button"
-                  onClick={() => handleRemoveDislike(d)}
+                  onClick={() => handleRemoveDislike(d.id)}
                   className="text-slate-400 hover:text-slate-700 ml-1 font-bold"
                 >
                   ×
@@ -333,21 +353,34 @@ export function ChildForm({
           )}
         </div>
 
-        <div className="flex gap-2 pt-2 border-t border-slate-100">
+        <div className="pt-2 border-t border-slate-100 space-y-2">
           <input
             type="text"
-            placeholder="e.g. broccoli, mushrooms"
-            value={newDislike}
-            onChange={(e) => setNewDislike(e.target.value)}
-            className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 min-h-[40px] focus:outline-none focus:border-emerald-600"
+            placeholder="Search foods, e.g. spinach"
+            value={dislikeSearch}
+            onChange={(e) => setDislikeSearch(e.target.value)}
+            aria-label="Search foods to add as a dislike"
+            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 min-h-[40px] focus:outline-none focus:border-emerald-600"
           />
-          <button
-            type="button"
-            onClick={handleAddDislike}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg border border-slate-300 transition-colors min-h-[40px]"
-          >
-            + Add Dislike
-          </button>
+          {dislikeSearch.trim().length >= 2 && (
+            <ul className="border border-slate-200 rounded-lg divide-y divide-slate-100 bg-white">
+              {foodResults.isLoading && <li className="px-3 py-2 text-xs text-slate-400">Searching...</li>}
+              {foodResults.data?.length === 0 && (
+                <li className="px-3 py-2 text-xs text-slate-400">No matching foods.</li>
+              )}
+              {foodResults.data?.map((f) => (
+                <li key={f.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleAddDislike(f)}
+                    className="w-full text-left px-3 py-2 text-xs text-slate-800 hover:bg-slate-50 min-h-[40px]"
+                  >
+                    + {f.name} <span className="text-slate-400">({f.category})</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
