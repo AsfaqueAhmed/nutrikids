@@ -6,7 +6,7 @@ Status: Draft for review.
 
 ## 1. Purpose and scope
 
-NutriKids is a mobile-first nutrition and child-health platform for children aged 0–12. This spec covers the whole product across four phases, then divides the work so it can be built in parallel by three agents (Claude, Codex, Antigravity) without conflicts.
+NutriKids is a web-based nutrition and child-health platform for children aged 0–12. This spec covers the whole product across four phases, then divides the work between two agents: Claude builds the backend and Antigravity builds the web front end. There is no native or Flutter app.
 
 Additions to the BRD agreed in discussion:
 - **Vaccination** tracking (new, Phase 1).
@@ -20,7 +20,7 @@ Additions to the BRD agreed in discussion:
 |---|---|
 | Backend | NestJS (TypeScript), REST under `/v1` |
 | Database / ORM | PostgreSQL, Prisma |
-| Mobile | Flutter, GetX, Dio |
+| Parent app | Next.js + Tailwind responsive web app, installable as a PWA (offline cache, service worker, web push) |
 | Web panels | Next.js + Tailwind (admin, nutritionist) |
 | Auth | JWT short-lived access + rotating refresh tokens with reuse detection |
 | Allergy rule | Severe: hard block, no override. Mild/moderate: warning + explicit confirmation |
@@ -37,7 +37,7 @@ Monorepo:
 
 ```
 apps/api          NestJS backend
-apps/mobile       Flutter parent app
+apps/web          Next.js parent web app (PWA)
 apps/admin-web    Next.js admin panel          (Phase 2)
 apps/pro-web      Next.js nutritionist panel   (Phase 2)
 packages/contracts  Prisma schema + OpenAPI spec (shared contract, see section 8)
@@ -58,7 +58,7 @@ Backend modules (each exposes a service interface; other modules depend on inter
 | Nutrition | 1 | Daily nutrient totals and score | Meal, Child |
 | Vaccination | 1 | Vaccine catalogue, schedule, per-child tracking | Child, Notification |
 | Hospital | 1 | Nearby search, admin CSV import | — |
-| Notification | 1 | Device tokens, preferences, scheduling, FCM | User |
+| Notification | 1 | Push subscriptions, preferences, scheduling, web push | User |
 | Doctor | 2 | Professional profiles, verification | User |
 | Consultation | 2 | Booking, chat, video (Agora), payments | Doctor, Child |
 | Content | 2 | Articles, tips, static pages | Doctor |
@@ -77,7 +77,7 @@ One function in the Meal module. Every path that adds a meal (manual add, swap, 
 
 ### 4.2 Sync
 - Every client-created record carries a client-generated UUID and `updatedAt`.
-- Writes are idempotent by UUID. Last write wins; the response includes `overwritten: true` when a newer server value was replaced.
+- Writes are idempotent by UUID. Last write wins by `clientUpdatedAt`. A write older than the stored value is not applied; the response returns the stored value with `sync.superseded: true` so the client can tell the user their change was replaced.
 - Reads support `?updatedSince=` for pulling changes after offline use.
 
 ### 4.3 Errors and security
@@ -150,7 +150,7 @@ Phase 1 is fully free. Subscription gating arrives in Phase 2; existing Phase 1 
 | 0. Foundation | Monorepo, API skeleton, Prisma schema (Phase 1), OpenAPI contract, CI, seed pipeline | — |
 | 1a. Backend core | Auth, User, Child, Food, Meal (allergy check, generation, grocery), Growth, Nutrition | 0 |
 | 1b. Health extras | Vaccination, Hospital, Notification (incl. meal reminders) | 0, 1a for Child |
-| 1c. Mobile app | Onboarding, child profiles, meals, growth, score, vaccination, hospitals, notifications, offline | contract from 0; live API from 1a/1b |
+| 1c. Parent web app | Onboarding, child profiles, meals, growth, score, vaccination, hospitals, notifications, offline (PWA) | contract from 0; live API from 1a/1b |
 | 1d. Seed data | 200–300 meals, allergen tags, Bangladesh vaccine schedule, hospital list | 0 (schema) |
 | 2. Engagement | Doctor, Consultation, Content, Subscription, Admin; admin and pro web; school lunch; nutrition logging | 1 |
 | 3. AI | Rule-based recommendations, gap detection, correction loop, growth prediction | 2 (logging data) |
@@ -169,9 +169,8 @@ Principle: contract first, then parallel work inside separate directories, with 
 
 | Agent | Owns | Why |
 |---|---|---|
-| Claude | `packages/contracts`, `apps/api` modules Auth, Child, Meal (allergy check, generation), Growth, Nutrition; integration and review of all merges | Safety-critical and cross-module logic; owns the contract |
-| Codex | `apps/api` modules Food, Vaccination, Hospital, Notification; unit and integration tests; the CSV/seed import scripts | Bounded modules with clear inputs and outputs, easy to verify |
-| Antigravity | `apps/mobile` (Flutter); later `apps/admin-web` and `apps/pro-web`; browser-based UI checks | UI-heavy work and visual testing |
+| Claude | `packages/contracts`, all of `apps/api`, `data/seed`, tests, and review of all merges | Owns the contract and every backend module |
+| Antigravity | `apps/web` (parent web app); later `apps/admin-web` and `apps/pro-web`; browser-based UI checks | UI-heavy work and visual testing |
 | Whoever is free | `data/seed` research: hospitals (open sources only), vaccine schedule (official sources), foods | Data files only, reviewed before import |
 
 ### 8.3 Rules to avoid conflicts
@@ -179,13 +178,13 @@ Principle: contract first, then parallel work inside separate directories, with 
 2. Each agent works on its own branch (or worktree) and merges through a pull request.
 3. Claude reviews every pull request against this spec before merge.
 4. Cross-module calls go through service interfaces defined in the contract; a module owner never reaches into another module's tables.
-5. The mobile app builds against the OpenAPI mock until the real endpoint exists, so it is not blocked on the backend.
+5. The web app builds against the OpenAPI mock until the real endpoint exists, so it is not blocked on the backend.
 6. Seed data is reviewed by a human (medical advisor for vaccines and nutrition) before it is treated as correct.
 7. Commit messages state the module and task id from the plan.
 
 ### 8.4 Order of work
 1. Phase 0 (Claude): contract, skeleton, CI. Everyone waits for this to merge.
-2. In parallel: Claude on 1a, Codex on Food then Vaccination, Hospital, Notification, Antigravity on the mobile app skeleton against the mock, and seed research.
+2. In parallel: Claude on 1a, Antigravity on the web app skeleton against the mock, and seed research.
 3. Integration pass (Claude): connect the app to the live API, run the end-to-end flow.
 4. Repeat the pattern for Phases 2, 3 and 4.
 
@@ -194,7 +193,7 @@ Principle: contract first, then parallel work inside separate directories, with 
 - Unit: allergy check (every severity, derived tags), WHO percentiles, nutrition score, vaccine due-date generation, reminder scheduling.
 - Integration (real PostgreSQL): sync and idempotency, ownership checks, nearby-hospital queries, plan generation.
 - End-to-end: register, add child, add allergy, generate plan, confirm no severe-allergen meal, mark a vaccine as given.
-- Contract: the API is validated against the OpenAPI spec; the mobile app's generated client must compile against it.
+- Contract: the API is validated against the OpenAPI spec; the web app's generated client must compile against it.
 
 ## 10. Open items
 
