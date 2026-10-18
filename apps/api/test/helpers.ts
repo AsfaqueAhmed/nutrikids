@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Type } from '@nestjs/common';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
@@ -6,8 +6,9 @@ import { PrismaService } from '../src/prisma/prisma.service';
 
 export async function createTestApp(
   customize?: (b: TestingModuleBuilder) => TestingModuleBuilder,
+  controllers: Type<unknown>[] = [],
 ): Promise<INestApplication> {
-  let builder = Test.createTestingModule({ imports: [AppModule] });
+  let builder = Test.createTestingModule({ imports: [AppModule], controllers });
   if (customize) builder = customize(builder);
   const mod = await builder.compile();
   const app = mod.createNestApplication();

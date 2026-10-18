@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { loadEnv } from './config/env';
+import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { HealthController } from './health/health.controller';
 
@@ -11,6 +12,7 @@ import { HealthController } from './health/health.controller';
       validate: (raw) => loadEnv(raw as NodeJS.ProcessEnv),
     }),
     PrismaModule,
+    AuthModule,
   ],
   controllers: [HealthController],
 })

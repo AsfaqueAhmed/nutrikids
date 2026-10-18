@@ -1,0 +1,12 @@
+import { Injectable } from '@nestjs/common';
+import * as argon2 from 'argon2';
+
+@Injectable()
+export class PasswordService {
+  hash(plain: string) {
+    return argon2.hash(plain);
+  }
+  verify(hash: string, plain: string) {
+    return argon2.verify(hash, plain);
+  }
+}
