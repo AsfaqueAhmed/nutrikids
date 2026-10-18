@@ -1,0 +1,381 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PARENT
+  NUTRITIONIST
+  ADMIN
+}
+enum Gender {
+  MALE
+  FEMALE
+}
+enum ActivityLevel {
+  SEDENTARY
+  MODERATE
+  ACTIVE
+}
+enum DietType {
+  NON_VEGETARIAN
+  VEGETARIAN
+  VEGAN
+  PESCATARIAN
+}
+enum Severity {
+  MILD
+  MODERATE
+  SEVERE
+}
+enum Allergen {
+  MILK
+  EGG
+  PEANUT
+  TREE_NUT
+  WHEAT
+  SOY
+  FISH
+  SHELLFISH
+  SESAME
+}
+enum MealSlot {
+  BREAKFAST
+  LUNCH
+  MORNING_SNACK
+  AFTERNOON_SNACK
+  DINNER
+}
+enum FeedingType {
+  BREAST
+  FORMULA
+  SOLID
+}
+enum PlanType {
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+enum PlanCreator {
+  PARENT
+  SYSTEM
+  NUTRITIONIST
+}
+enum VaccineAvailability {
+  GOVERNMENT_FREE
+  PRIVATE_PAID
+  BOTH
+}
+enum PaidType {
+  GOVERNMENT
+  PRIVATE
+}
+enum AuthTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+enum NotificationType {
+  DAILY_PLAN
+  WATER
+  WEEKLY_SCORE
+  GROWTH_REMINDER
+  VACCINE_REMINDER
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String?
+  role            Role     @default(PARENT)
+  emailVerifiedAt DateTime?
+  timezone        String   @default("Asia/Dhaka")
+  googleSub       String?  @unique
+  appleSub        String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  children        Child[]
+  refreshTokens   RefreshToken[]
+  authTokens      AuthToken[]
+  pushSubscriptions PushSubscription[]
+  notificationPreferences NotificationPreference[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  familyId  String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([familyId])
+}
+
+model AuthToken {
+  id        String        @id @default(uuid())
+  userId    String
+  type      AuthTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Child {
+  id           String        @id @default(uuid())
+  userId       String
+  name         String
+  dateOfBirth  DateTime      @db.Date
+  gender       Gender
+  heightCm     Decimal?      @db.Decimal(5, 1)
+  weightKg     Decimal?      @db.Decimal(5, 2)
+  activityLevel ActivityLevel @default(MODERATE)
+  dietType     DietType      @default(NON_VEGETARIAN)
+  photoUrl     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allergies    ChildAllergy[]
+  conditions   ChildCondition[]
+  dislikes     FoodDislike[]
+  feedingLogs  FeedingLog[]
+  introductions FoodIntroduction[]
+  growthRecords GrowthRecord[]
+  mealPlanEntries MealPlanEntry[]
+  groceryChecks GroceryCheck[]
+  vaccinations ChildVaccination[]
+  mealReminders MealReminder[]
+  @@index([userId])
+}
+
+model ChildAllergy {
+  childId  String
+  allergen Allergen
+  severity Severity
+  child    Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@id([childId, allergen])
+}
+
+model ChildCondition {
+  id      String @id @default(uuid())
+  childId String
+  name    String
+  child   Child  @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@unique([childId, name])
+}
+
+model FoodDislike {
+  childId String
+  foodId  String
+  child   Child  @relation(fields: [childId], references: [id], onDelete: Cascade)
+  food    Food   @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  @@id([childId, foodId])
+}
+
+model Food {
+  id             String     @id @default(uuid())
+  name           String     @unique
+  category       String
+  allergens      Allergen[]
+  nutrition      Json       // per 100 g: calories, protein, carbs, fat, fiber, iron, calcium, vitaminA, vitaminC, vitaminD, zinc
+  ageMinMonths   Int        @default(0)
+  ageMaxMonths   Int        @default(144)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  recipeFoods    RecipeFood[]
+  dislikes       FoodDislike[]
+  introductions  FoodIntroduction[]
+  @@index([category])
+}
+
+model Recipe {
+  id            String     @id @default(uuid())
+  name          String     @unique
+  instructions  String
+  prepMinutes   Int
+  ageMinMonths  Int        @default(6)
+  ageMaxMonths  Int        @default(144)
+  slots         MealSlot[]
+  suitableDiets DietType[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  foods         RecipeFood[]
+  entries       MealPlanEntry[]
+}
+
+model RecipeFood {
+  recipeId  String
+  foodId    String
+  quantityG Decimal @db.Decimal(8, 1)
+  recipe    Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  food      Food    @relation(fields: [foodId], references: [id])
+  @@id([recipeId, foodId])
+}
+
+model MealPlanEntry {
+  id              String      @id // client UUID
+  childId         String
+  date            DateTime    @db.Date
+  slot            MealSlot
+  recipeId        String
+  portion         Decimal     @db.Decimal(4, 2) @default(1)
+  createdBy       PlanCreator @default(PARENT)
+  clientUpdatedAt DateTime
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  child           Child       @relation(fields: [childId], references: [id], onDelete: Cascade)
+  recipe          Recipe      @relation(fields: [recipeId], references: [id])
+  @@unique([childId, date, slot])
+  @@index([childId, date])
+}
+
+model GroceryCheck {
+  childId         String
+  foodId          String
+  weekStart       DateTime @db.Date
+  checked         Boolean
+  clientUpdatedAt DateTime
+  child           Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@id([childId, foodId, weekStart])
+}
+
+model GrowthRecord {
+  id                  String   @id // client UUID
+  childId             String
+  date                DateTime @db.Date
+  heightCm            Decimal? @db.Decimal(5, 1)
+  weightKg            Decimal? @db.Decimal(5, 2)
+  headCircumferenceCm Decimal? @db.Decimal(4, 1)
+  clientUpdatedAt     DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  child               Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@index([childId, date])
+}
+
+model FeedingLog {
+  id              String      @id // client UUID
+  childId         String
+  type            FeedingType
+  at              DateTime
+  durationMinutes Int?
+  notes           String?
+  clientUpdatedAt DateTime
+  updatedAt       DateTime    @updatedAt
+  child           Child       @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@index([childId, at])
+}
+
+model FoodIntroduction {
+  id              String   @id // client UUID
+  childId         String
+  foodId          String
+  introducedOn    DateTime @db.Date
+  reaction        String?
+  notes           String?
+  clientUpdatedAt DateTime
+  updatedAt       DateTime @updatedAt
+  child           Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  food            Food     @relation(fields: [foodId], references: [id])
+  @@unique([childId, foodId])
+}
+
+model Vaccine {
+  id             String              @id @default(uuid())
+  code           String              @unique
+  name           String
+  disease        String
+  description    String
+  availability   VaccineAvailability
+  isMandatory    Boolean             @default(false)
+  priceMinBdt    Int?
+  priceMaxBdt    Int?
+  priceNote      String?
+  priceUpdatedAt DateTime?
+  sourceNote     String
+  verified       Boolean             @default(false)
+  schedule       VaccineScheduleItem[]
+}
+
+model VaccineScheduleItem {
+  id                       String   @id @default(uuid())
+  vaccineId                String
+  doseNumber               Int
+  suggestedAgeDays         Int
+  minAgeDays               Int
+  maxAgeDays               Int?
+  intervalFromPreviousDays Int?
+  notes                    String?
+  vaccine                  Vaccine  @relation(fields: [vaccineId], references: [id], onDelete: Cascade)
+  childVaccinations        ChildVaccination[]
+  @@unique([vaccineId, doseNumber])
+}
+
+model ChildVaccination {
+  id              String    @id @default(uuid())
+  childId         String
+  scheduleItemId  String
+  dueDate         DateTime  @db.Date
+  givenDate       DateTime? @db.Date
+  facilityName    String?
+  paidType        PaidType?
+  amountPaidBdt   Int?
+  batchNo         String?
+  notes           String?
+  cardPhotoUrl    String?
+  clientUpdatedAt DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  child           Child     @relation(fields: [childId], references: [id], onDelete: Cascade)
+  scheduleItem    VaccineScheduleItem @relation(fields: [scheduleItemId], references: [id], onDelete: Cascade)
+  @@unique([childId, scheduleItemId])
+  @@index([childId, dueDate])
+}
+
+model Hospital {
+  id         String    @id @default(uuid())
+  name       String
+  type       String
+  address    String
+  district   String
+  lat        Float
+  lng        Float
+  phone      String?
+  services   String[]
+  source     String
+  verifiedAt DateTime?
+  @@unique([name, district])
+  @@index([lat, lng])
+}
+
+model PushSubscription {
+  id       String @id @default(uuid())
+  userId   String
+  endpoint String @unique
+  p256dh   String
+  auth     String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NotificationPreference {
+  userId    String
+  type      NotificationType
+  enabled   Boolean          @default(true)
+  timeOfDay String?          // "HH:mm" in the user's timezone
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, type])
+}
+
+model MealReminder {
+  childId   String
+  slot      MealSlot
+  timeOfDay String   // "HH:mm" in the user's timezone
+  enabled   Boolean  @default(true)
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@id([childId, slot])
+}
