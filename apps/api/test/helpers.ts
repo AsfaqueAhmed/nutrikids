@@ -41,3 +41,17 @@ export async function registerAndLogin(
     .set('Authorization', `Bearer ${accessToken}`);
   return { token: accessToken, userId: (me.body as { id: string }).id };
 }
+
+export async function makeAdmin(
+  app: INestApplication,
+  email = 'admin@example.com',
+) {
+  const { userId } = await registerAndLogin(app, email);
+  await app
+    .get(PrismaService)
+    .user.update({ where: { id: userId }, data: { role: 'ADMIN' } });
+  const res = await request(app.getHttpServer() as App)
+    .post('/v1/auth/login')
+    .send({ email, password: 'password123' });
+  return { token: (res.body as { accessToken: string }).accessToken };
+}

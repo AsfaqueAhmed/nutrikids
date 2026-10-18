@@ -4,6 +4,7 @@ import { loadEnv } from './config/env';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { FoodModule } from './food/food.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -15,6 +16,7 @@ import { HealthController } from './health/health.controller';
     PrismaModule,
     AuthModule,
     UserModule,
+    FoodModule,
   ],
   controllers: [HealthController],
 })
