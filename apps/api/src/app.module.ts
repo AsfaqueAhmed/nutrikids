@@ -15,7 +15,6 @@ import { HospitalModule } from './hospital/hospital.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
 import { HealthController } from './health/health.controller';
-import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
