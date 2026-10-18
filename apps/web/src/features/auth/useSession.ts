@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
 import { refreshSession, tokens } from '@/lib/api/auth';
-import { ApiException, toProblem } from '@/lib/api/errors';
-import type { components } from '@/lib/api/schema';
+import { unwrap } from '@/lib/api/unwrap';
+import type { TokenPair, User } from '@/lib/api/models';
 
-export type User = components['schemas']['User'];
+export type { User };
 export type SessionStatus = 'loading' | 'authed' | 'anon';
 
 export function useSession() {
@@ -18,10 +18,11 @@ export function useSession() {
   const fetchCurrentUser = useCallback(async () => {
     try {
       const res = await api.GET('/v1/me');
-      if (res.data) {
-        setUser(res.data);
+      if (res.response.ok) {
+        const me = unwrap<User>(res);
+        setUser(me);
         setStatus('authed');
-        return res.data;
+        return me;
       }
       setStatus('anon');
       return null;
@@ -56,17 +57,13 @@ export function useSession() {
       const res = await api.POST('/v1/auth/login', {
         body: { email, password },
       });
-      if (res.error) {
-        throw new ApiException(toProblem(res.response, res.error));
-      }
-      if (res.data) {
-        tokens.setAccess(res.data.accessToken);
-        tokens.setRefresh(res.data.refreshToken);
-        setUser(res.data.user);
-        setStatus('authed');
-      }
+      const pair = unwrap<TokenPair>(res);
+      tokens.setAccess(pair.accessToken);
+      tokens.setRefresh(pair.refreshToken);
+      // the API returns tokens only; load the profile separately
+      await fetchCurrentUser();
     },
-    []
+    [fetchCurrentUser]
   );
 
   const register = useCallback(
@@ -74,24 +71,20 @@ export function useSession() {
       const res = await api.POST('/v1/auth/register', {
         body: { email, password },
       });
-      if (res.error) {
-        throw new ApiException(toProblem(res.response, res.error));
-      }
-      if (res.data) {
-        tokens.setAccess(res.data.accessToken);
-        tokens.setRefresh(res.data.refreshToken);
-        setUser(res.data.user);
-        setStatus('authed');
-      }
+      const pair = unwrap<TokenPair>(res);
+      tokens.setAccess(pair.accessToken);
+      tokens.setRefresh(pair.refreshToken);
+      // the API returns tokens only; load the profile separately
+      await fetchCurrentUser();
     },
-    []
+    [fetchCurrentUser]
   );
 
   const logout = useCallback(async () => {
     try {
       const refresh = tokens.getRefresh();
       await api.POST('/v1/auth/logout', {
-        body: { refreshToken: refresh ?? undefined },
+        body: { refreshToken: refresh ?? '' },
       });
     } catch {
       // Best effort logout

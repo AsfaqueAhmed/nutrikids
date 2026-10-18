@@ -46,7 +46,7 @@ describe('useSession', () => {
         emailVerified: true,
         timezone: 'Asia/Dhaka',
       },
-      response: { status: 200 } as Response,
+      response: { status: 200, ok: true } as Response,
     } as unknown as Awaited<ReturnType<typeof api.GET>>);
 
     // Mock global fetch for auth/refresh
@@ -68,7 +68,7 @@ describe('useSession', () => {
     tokens.setRefresh('refresh-token');
     vi.mocked(api.POST).mockResolvedValueOnce({
       data: { success: true },
-      response: { status: 200 } as Response,
+      response: { status: 200, ok: true } as Response,
     } as unknown as Awaited<ReturnType<typeof api.POST>>);
 
     const { result } = renderHook(() => useSession(), { wrapper: createWrapper() });

@@ -7,6 +7,7 @@ import * as z from 'zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api/client';
+import { toProblem } from '@/lib/api/errors';
 
 const resetSchema = z
   .object({
@@ -44,8 +45,10 @@ function ResetPasswordForm() {
       const res = await api.POST('/v1/auth/reset-password', {
         body: { token, password: values.password },
       });
-      if (res.error) {
-        setErrorMsg(res.error.message || 'Failed to reset password. Link may be expired.');
+      if (!res.response.ok) {
+        setErrorMsg(
+          toProblem(res.response, res.error).message || 'Failed to reset password. Link may be expired.',
+        );
       } else {
         router.push('/login?reset=success');
       }

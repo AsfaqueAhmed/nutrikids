@@ -4,25 +4,23 @@ import { useRouter } from 'next/navigation';
 import { ChildForm } from '@/features/children/ChildForm';
 import { useChildren, CreateChildDto } from '@/features/children/useChildren';
 import { useActiveChild } from '@/features/children/useActiveChild';
-import { api } from '@/lib/api/client';
+import type { Allergy } from '@/lib/api/models';
 import Link from 'next/link';
 
 export default function NewChildPage() {
   const router = useRouter();
-  const { createChild } = useChildren();
+  const { createChild, saveExtras } = useChildren();
   const { setActiveChildId } = useActiveChild();
 
   const handleCreate = async (
     dto: CreateChildDto,
-    allergies: { allergenTag: string; severity: 'mild' | 'moderate' | 'severe' }[]
+    allergies: Allergy[],
+    dislikeFoodIds: string[],
   ) => {
     const created = await createChild(dto);
 
-    for (const a of allergies) {
-      await api.POST('/v1/children/{id}/allergies', {
-        params: { path: { id: created.id } },
-        body: a,
-      });
+    if (allergies.length || dislikeFoodIds.length) {
+      await saveExtras({ id: created.id, allergies, dislikeFoodIds });
     }
 
     setActiveChildId(created.id);

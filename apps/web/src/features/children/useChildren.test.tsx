@@ -10,6 +10,7 @@ vi.mock('@/lib/api/client', () => ({
     GET: vi.fn(),
     POST: vi.fn(),
     PUT: vi.fn(),
+    PATCH: vi.fn(),
     DELETE: vi.fn(),
   },
 }));
@@ -32,22 +33,24 @@ describe('useChildren', () => {
     const mockChildren = [
       {
         id: 'c1',
-        userId: 'u1',
         name: 'Maya',
         dateOfBirth: '2023-01-15',
-        gender: 'female',
+        ageMonths: 45,
+        gender: 'FEMALE',
         heightCm: 85,
         weightKg: 12,
-        activityLevel: 'moderate',
-        dietType: 'omnivore',
-        createdAt: '2026-01-01',
-        updatedAt: '2026-01-01',
+        activityLevel: 'MODERATE',
+        dietType: 'NON_VEGETARIAN',
+        photoUrl: null,
+        allergies: [],
+        conditions: [],
+        dislikes: [],
       },
     ];
 
     vi.mocked(api.GET).mockResolvedValueOnce({
       data: mockChildren,
-      response: { status: 200 } as Response,
+      response: { status: 200, ok: true } as Response,
     } as unknown as Awaited<ReturnType<typeof api.GET>>);
 
     const { result } = renderHook(() => useChildren(), { wrapper: createWrapper() });
