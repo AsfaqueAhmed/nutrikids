@@ -86,12 +86,28 @@ enum NotificationType {
   VACCINE_REMINDER
 }
 
+enum EatenStatus {
+  FULL
+  PARTIAL
+  SKIPPED
+}
+enum ArticleKind {
+  ARTICLE
+  TIP
+  PAGE
+}
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
   id              String   @id @default(uuid())
   email           String   @unique
   passwordHash    String?
   role            Role     @default(PARENT)
   emailVerifiedAt DateTime?
+  disabledAt      DateTime?
   timezone        String   @default("Asia/Dhaka")
   googleSub       String?  @unique
   appleSub        String?  @unique
@@ -102,6 +118,7 @@ model User {
   authTokens      AuthToken[]
   pushSubscriptions PushSubscription[]
   notificationPreferences NotificationPreference[]
+  articles        Article[]
 }
 
 model RefreshToken {
@@ -152,6 +169,7 @@ model Child {
   vaccinations ChildVaccination[]
   mealReminders MealReminder[]
   @@index([userId])
+  nutritionLogs NutritionLog[]
 }
 
 model ChildAllergy {
@@ -378,4 +396,40 @@ model MealReminder {
   enabled   Boolean  @default(true)
   child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
   @@id([childId, slot])
+}
+
+model NutritionLog {
+  id              String      @id // client UUID
+  childId         String
+  date            DateTime    @db.Date
+  slot            MealSlot
+  eatenStatus     EatenStatus
+  percent         Int?
+  notes           String?
+  clientUpdatedAt DateTime
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  child           Child       @relation(fields: [childId], references: [id], onDelete: Cascade)
+  @@unique([childId, date, slot])
+  @@index([childId, date])
+}
+
+model Article {
+  id           String        @id @default(uuid())
+  kind         ArticleKind   @default(ARTICLE)
+  slug         String        @unique
+  title        String
+  summary      String
+  body         String
+  category     String
+  ageMinMonths Int?
+  ageMaxMonths Int?
+  coverUrl     String?
+  status       ArticleStatus @default(DRAFT)
+  publishedAt  DateTime?
+  authorId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  author       User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  @@index([status, kind, category])
 }
