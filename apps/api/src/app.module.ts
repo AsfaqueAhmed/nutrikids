@@ -17,6 +17,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
 import { HealthController } from './health/health.controller';
 import { ArticleModule } from './article/article.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ArticleModule } from './article/article.module';
     ScheduleModule.forRoot(),
     NotificationModule,
     ArticleModule,
+    AdminModule,
   ],
   controllers: [HealthController],
 })

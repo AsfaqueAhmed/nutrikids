@@ -69,6 +69,7 @@ export class TokenService {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: row.userId },
     });
+    if (user.disabledAt) throw unauthorized('ACCOUNT_DISABLED');
     return this.issue(user, row.familyId);
   }
 
