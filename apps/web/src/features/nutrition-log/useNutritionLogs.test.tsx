@@ -24,9 +24,11 @@ function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return ({ children }: { children: React.ReactNode }) => (
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
+  Wrapper.displayName = 'QueryClientWrapper';
+  return Wrapper;
 }
 
 describe('useNutritionLogs & useLogMeal hooks', () => {
@@ -51,7 +53,7 @@ describe('useNutritionLogs & useLogMeal hooks', () => {
       data: mockLogs,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof api.GET>);
 
     const { result } = renderHook(
       () => useNutritionLogs('child-1', '2026-10-19', '2026-10-19'),
@@ -89,7 +91,7 @@ describe('useNutritionLogs & useLogMeal hooks', () => {
       data: mockSummary,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof api.GET>);
 
     const { result } = renderHook(
       () => useNutritionSummary('child-1', '2026-10-13', '2026-10-19'),

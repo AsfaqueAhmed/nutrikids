@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
 import { unwrap } from '@/lib/api/unwrap';
 import type { AdminVaccine } from '@/lib/api/models';
+import type { components } from '@/lib/api/schema';
 
 export type UpdateVaccineInput = {
   name?: string;
@@ -48,7 +49,7 @@ export function useUpdateVaccine() {
     mutationFn: async ({ id, data }: { id: string; data: UpdateVaccineInput }) => {
       const res = await apiClient.PATCH('/v1/admin/vaccines/{id}', {
         params: { path: { id } },
-        body: data as any,
+        body: data as unknown as components['schemas']['UpdateVaccineDto'],
       });
       return unwrap(res) as unknown as AdminVaccine;
     },
@@ -65,7 +66,7 @@ export function useUpdateScheduleItem() {
     mutationFn: async ({ id, data }: { id: string; data: UpdateScheduleItemInput }) => {
       const res = await apiClient.PATCH('/v1/admin/vaccine-schedule-items/{id}', {
         params: { path: { id } },
-        body: data as any,
+        body: data as unknown as components['schemas']['UpdateScheduleItemDto'],
       });
       return unwrap(res);
     },

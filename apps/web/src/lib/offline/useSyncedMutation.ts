@@ -7,7 +7,7 @@ export type SyncedMutationOptions<TBody> = {
   url: (b: TBody) => string;
   key: (b: TBody) => string;
   onOptimistic?: (b: TBody) => void;
-  invalidate: unknown[][];
+  invalidate: (readonly unknown[])[];
   toBody?: (b: TBody) => unknown;
 };
 
@@ -40,7 +40,7 @@ export function useSyncedMutation<TBody extends { clientUpdatedAt?: string }>(
       });
 
       for (const queryKey of opts.invalidate) {
-        await queryClient.invalidateQueries({ queryKey: queryKey as any });
+        await queryClient.invalidateQueries({ queryKey });
       }
 
       return { queued: true, superseded: false };
@@ -65,7 +65,7 @@ export function useSyncedMutation<TBody extends { clientUpdatedAt?: string }>(
       }
 
       for (const queryKey of opts.invalidate) {
-        await queryClient.invalidateQueries({ queryKey: queryKey as any });
+        await queryClient.invalidateQueries({ queryKey });
       }
 
       const data = await res.json().catch(() => null);
@@ -84,7 +84,7 @@ export function useSyncedMutation<TBody extends { clientUpdatedAt?: string }>(
         });
 
         for (const queryKey of opts.invalidate) {
-          await queryClient.invalidateQueries({ queryKey: queryKey as any });
+          await queryClient.invalidateQueries({ queryKey });
         }
 
         return { queued: true, superseded: false };

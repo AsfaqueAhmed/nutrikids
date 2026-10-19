@@ -8,6 +8,7 @@ import type {
   ArticleSummary,
   Page,
 } from '@/lib/api/models';
+import type { components } from '@/lib/api/schema';
 
 export type CreateArticleInput = {
   kind?: ArticleKind;
@@ -70,7 +71,7 @@ export function useArticleMutations() {
   const createMutation = useMutation({
     mutationFn: async (data: CreateArticleInput) => {
       const res = await apiClient.POST('/v1/admin/articles', {
-        body: data as any,
+        body: data as unknown as components['schemas']['CreateArticleDto'],
       });
       return unwrap(res) as unknown as ArticleDetail;
     },
@@ -83,7 +84,7 @@ export function useArticleMutations() {
     mutationFn: async ({ id, data }: { id: string; data: UpdateArticleInput }) => {
       const res = await apiClient.PATCH('/v1/admin/articles/{id}', {
         params: { path: { id } },
-        body: data as any,
+        body: data as unknown as components['schemas']['UpdateArticleDto'],
       });
       return unwrap(res) as unknown as ArticleDetail;
     },

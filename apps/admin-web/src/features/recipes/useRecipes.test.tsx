@@ -18,9 +18,11 @@ function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return ({ children }: { children: React.ReactNode }) => (
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
+  Wrapper.displayName = 'QueryClientWrapper';
+  return Wrapper;
 }
 
 describe('useRecipes hook', () => {
@@ -48,7 +50,7 @@ describe('useRecipes hook', () => {
       data: mockRecipes,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.GET>);
 
     const { result } = renderHook(() => useRecipes(), { wrapper: createWrapper() });
 
@@ -62,13 +64,13 @@ describe('useRecipes hook', () => {
       data: { id: 'rec-2', name: 'Apple Puree' },
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.POST>);
 
     vi.mocked(apiClient.DELETE).mockResolvedValueOnce({
       data: undefined,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.DELETE>);
 
     const { result } = renderHook(() => useRecipeMutations(), { wrapper: createWrapper() });
 

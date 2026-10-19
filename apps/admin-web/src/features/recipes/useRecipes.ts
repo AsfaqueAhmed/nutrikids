@@ -3,6 +3,7 @@ import { apiClient } from '@/lib/api/client';
 import { unwrap } from '@/lib/api/unwrap';
 import type { MealSlot, Recipe } from '@/lib/api/models';
 import type { DietType } from '@/lib/api/domain';
+import type { components } from '@/lib/api/schema';
 
 export type CreateRecipeFoodInput = {
   foodId: string;
@@ -62,7 +63,7 @@ export function useRecipeMutations() {
   const createMutation = useMutation({
     mutationFn: async (data: CreateRecipeInput) => {
       const res = await apiClient.POST('/v1/recipes', {
-        body: data as any,
+        body: data as unknown as components['schemas']['RecipeDto'],
       });
       return unwrap(res) as unknown as Recipe;
     },
@@ -75,7 +76,7 @@ export function useRecipeMutations() {
     mutationFn: async ({ id, data }: { id: string; data: CreateRecipeInput }) => {
       const res = await apiClient.PATCH('/v1/recipes/{id}', {
         params: { path: { id } },
-        body: data as any,
+        body: data as unknown as components['schemas']['UpdateRecipeDto'],
       });
       return unwrap(res) as unknown as Recipe;
     },

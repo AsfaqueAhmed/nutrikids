@@ -44,7 +44,6 @@ export function ArticleForm({
   loading = false,
 }: ArticleFormProps) {
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(Boolean(initial?.slug));
-  const [submitStatus, setSubmitStatus] = useState<ArticleStatus>(initial?.status ?? 'DRAFT');
 
   const {
     register,

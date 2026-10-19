@@ -4,7 +4,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { RecipeForm } from './RecipeForm';
-import { apiClient } from '@/lib/api/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('@/lib/api/client', () => ({
@@ -63,7 +62,6 @@ describe('RecipeForm component', () => {
 
   it('displays computed allergen tags from selected ingredients', async () => {
     const onSubmit = vi.fn();
-    const user = userEvent.setup();
 
     // Initial with foods having allergens MILK and PEANUT
     const initial = {

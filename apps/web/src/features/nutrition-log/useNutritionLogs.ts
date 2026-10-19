@@ -55,7 +55,11 @@ export function useLogMeal(childId: string) {
   const sync = useSyncedMutation<{ id: string } & LogInput & { clientUpdatedAt: string }>({
     url: (b) => `/v1/children/${childId}/nutrition-logs/${b.id}`,
     key: (b) => `/v1/children/${childId}/nutrition-logs/${b.id}`,
-    toBody: ({ id, ...rest }) => rest,
+    toBody: (b) => {
+      const rest = { ...b };
+      delete (rest as { id?: string }).id;
+      return rest;
+    },
     invalidate: [
       ['nutrition-logs', childId],
       ['nutrition-summary', childId],

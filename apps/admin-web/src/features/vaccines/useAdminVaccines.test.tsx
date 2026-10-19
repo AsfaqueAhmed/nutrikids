@@ -20,9 +20,11 @@ function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return ({ children }: { children: React.ReactNode }) => (
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
+  Wrapper.displayName = 'QueryClientWrapper';
+  return Wrapper;
 }
 
 describe('useAdminVaccines hooks', () => {
@@ -64,7 +66,7 @@ describe('useAdminVaccines hooks', () => {
       data: mockVaccines,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.GET>);
 
     const { result } = renderHook(() => useAdminVaccines(), {
       wrapper: createWrapper(),
@@ -80,7 +82,7 @@ describe('useAdminVaccines hooks', () => {
       data: { id: 'vac-1', verified: true },
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.PATCH>);
 
     const { result } = renderHook(() => useUpdateVaccine(), {
       wrapper: createWrapper(),
@@ -105,7 +107,7 @@ describe('useAdminVaccines hooks', () => {
       data: { id: 'item-1', suggestedAgeDays: 14 },
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.PATCH>);
 
     const { result } = renderHook(() => useUpdateScheduleItem(), {
       wrapper: createWrapper(),

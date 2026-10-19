@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import {
   useAdminArticles,
-  useAdminArticle,
   useArticleMutations,
 } from './useAdminArticles';
 import { apiClient } from '@/lib/api/client';
@@ -22,9 +21,11 @@ function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return ({ children }: { children: React.ReactNode }) => (
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
+  Wrapper.displayName = 'QueryClientWrapper';
+  return Wrapper;
 }
 
 describe('useAdminArticles hook', () => {
@@ -54,7 +55,7 @@ describe('useAdminArticles hook', () => {
       data: mockPage,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.GET>);
 
     const { result } = renderHook(
       () => useAdminArticles({ status: 'PUBLISHED', page: 1, limit: 15 }),
@@ -78,19 +79,19 @@ describe('useAdminArticles hook', () => {
       data: { id: 'art-new', slug: 'new-article' },
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.POST>);
 
     vi.mocked(apiClient.PATCH).mockResolvedValueOnce({
       data: { id: 'art-new', status: 'PUBLISHED' },
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.PATCH>);
 
     vi.mocked(apiClient.DELETE).mockResolvedValueOnce({
       data: undefined,
       error: undefined,
       response: new Response(),
-    } as any);
+    } as unknown as ReturnType<typeof apiClient.DELETE>);
 
     const { result } = renderHook(() => useArticleMutations(), { wrapper: createWrapper() });
 

@@ -32,7 +32,7 @@ describe('AdherenceCard', () => {
         perSlot: [],
       },
       isLoading: false,
-    } as any);
+    } as unknown as ReturnType<typeof useNutritionLogsModule.useNutritionSummary>);
 
     render(<AdherenceCard childId="child-1" />);
 
@@ -61,7 +61,7 @@ describe('AdherenceCard', () => {
     mockUseNutritionSummary.mockReturnValue({
       data: summaryData,
       isLoading: false,
-    } as any);
+    } as unknown as ReturnType<typeof useNutritionLogsModule.useNutritionSummary>);
 
     render(<AdherenceCard childId="child-1" />);
 
@@ -101,7 +101,7 @@ describe('AdherenceCard', () => {
         perSlot: [],
       },
       isLoading: false,
-    } as any);
+    } as unknown as ReturnType<typeof useNutritionLogsModule.useNutritionSummary>);
 
     render(<AdherenceCard childId="child-1" />);
 
