@@ -1687,6 +1687,86 @@
         ]
       }
     },
+    "/v1/admin/vaccines": {
+      "get": {
+        "operationId": "AdminVaccineController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
+        ]
+      }
+    },
+    "/v1/admin/vaccines/{id}": {
+      "patch": {
+        "operationId": "AdminVaccineController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVaccineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
+        ]
+      }
+    },
+    "/v1/admin/vaccine-schedule-items/{id}": {
+      "patch": {
+        "operationId": "AdminVaccineController_updateItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScheduleItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
+        ]
+      }
+    },
     "/v1/hospitals/nearby": {
       "get": {
         "operationId": "HospitalController_nearby",
@@ -3063,6 +3143,84 @@
           "givenDate",
           "clientUpdatedAt"
         ]
+      },
+      "UpdateVaccineDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "disease": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "GOVERNMENT_FREE",
+              "PRIVATE_PAID",
+              "BOTH"
+            ]
+          },
+          "isMandatory": {
+            "type": "boolean"
+          },
+          "priceMinBdt": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "priceMaxBdt": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "priceNote": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "sourceNote": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "verified": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateScheduleItemDto": {
+        "type": "object",
+        "properties": {
+          "suggestedAgeDays": {
+            "type": "number",
+            "minimum": 0
+          },
+          "minAgeDays": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maxAgeDays": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "intervalFromPreviousDays": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          }
+        }
       },
       "KeysDto": {
         "type": "object",
