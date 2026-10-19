@@ -1411,6 +1411,166 @@
         ]
       }
     },
+    "/v1/children/{childId}/nutrition-logs/summary": {
+      "get": {
+        "operationId": "NutritionLogController_summary",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
+    "/v1/children/{childId}/nutrition-logs/{logId}": {
+      "put": {
+        "operationId": "NutritionLogController_put",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "logId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      },
+      "delete": {
+        "operationId": "NutritionLogController_del",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "logId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
+    "/v1/children/{childId}/nutrition-logs": {
+      "get": {
+        "operationId": "NutritionLogController_list",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedSince",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
     "/v1/vaccines": {
       "get": {
         "operationId": "VaccinationController_catalogue",
@@ -2506,6 +2666,50 @@
         },
         "required": [
           "date",
+          "clientUpdatedAt"
+        ]
+      },
+      "NutritionLogDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "string",
+            "enum": [
+              "BREAKFAST",
+              "LUNCH",
+              "MORNING_SNACK",
+              "AFTERNOON_SNACK",
+              "DINNER"
+            ]
+          },
+          "eatenStatus": {
+            "type": "string",
+            "enum": [
+              "FULL",
+              "PARTIAL",
+              "SKIPPED"
+            ]
+          },
+          "percent": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 99
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "slot",
+          "eatenStatus",
           "clientUpdatedAt"
         ]
       },

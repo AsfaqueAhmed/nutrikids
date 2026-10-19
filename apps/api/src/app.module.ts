@@ -10,6 +10,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MealModule } from './meal/meal.module';
 import { GrowthModule } from './growth/growth.module';
 import { NutritionModule } from './nutrition/nutrition.module';
+import { NutritionLogModule } from './nutrition-log/nutrition-log.module';
 import { VaccinationModule } from './vaccination/vaccination.module';
 import { HospitalModule } from './hospital/hospital.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -31,6 +32,7 @@ import { HealthController } from './health/health.controller';
     MealModule,
     GrowthModule,
     NutritionModule,
+    NutritionLogModule,
     VaccinationModule,
     HospitalModule,
     ScheduleModule.forRoot(),
