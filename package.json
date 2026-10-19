@@ -10,6 +10,7 @@
     "test": "pnpm --filter api test",
     "test:web": "pnpm --filter web test",
     "test:admin": "pnpm --filter admin-web test",
-    "test:e2e": "pnpm --filter api test:e2e"
+    "test:e2e": "pnpm --filter api test:e2e",
+    "test:integration": "node apps/api/test/full-live-matrix.mjs"
   }
 }
