@@ -28,7 +28,6 @@ export function UserActions({ user, currentUserId }: UserActionsProps) {
     }
     try {
       await mutateAsync({ id: user.id, role: newRole });
-      setSelectedRole(newRole);
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : 'Failed to update role.');
     }
