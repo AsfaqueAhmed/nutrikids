@@ -134,3 +134,32 @@ export type AdminVaccine = {
     notes: string | null;
   }[];
 };
+
+export type RecipeFood = {
+  foodId: string;
+  name?: string;
+  quantityG: number;
+};
+
+export type Recipe = {
+  id: string;
+  name: string;
+  instructions: string;
+  prepMinutes: number;
+  ageMinMonths: number;
+  ageMaxMonths: number;
+  slots: MealSlot[];
+  suitableDiets: DietType[];
+  foods: {
+    foodId: string;
+    name: string;
+    quantityG: number;
+  }[];
+  allergens: Allergen[];
+  nutrition?: {
+    energyKcal: number;
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+  };
+};

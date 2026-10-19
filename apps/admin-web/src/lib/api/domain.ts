@@ -44,4 +44,14 @@ export const SEVERITIES: { value: Severity; label: string }[] = [
   { value: 'SEVERE', label: 'Severe (Hard Block)' },
 ];
 
+export type MealSlot = 'BREAKFAST' | 'MORNING_SNACK' | 'LUNCH' | 'AFTERNOON_SNACK' | 'DINNER';
+
+export const MEAL_SLOTS: { value: MealSlot; label: string }[] = [
+  { value: 'BREAKFAST', label: 'Breakfast' },
+  { value: 'MORNING_SNACK', label: 'Morning Snack' },
+  { value: 'LUNCH', label: 'Lunch' },
+  { value: 'AFTERNOON_SNACK', label: 'Afternoon Snack' },
+  { value: 'DINNER', label: 'Dinner' },
+];
+
 export const allergenLabel = (a: Allergen) => ALLERGENS.find((x) => x.value === a)?.label ?? a;

@@ -37,3 +37,4 @@ const auth: Middleware = {
 
 export const api = createClient<paths>({ baseUrl: API_URL });
 api.use(auth);
+export const apiClient = api;
