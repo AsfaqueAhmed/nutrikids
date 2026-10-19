@@ -580,6 +580,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/children/{childId}/nutrition-logs/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NutritionLogController_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/children/{childId}/nutrition-logs/{logId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["NutritionLogController_put"];
+        post?: never;
+        delete: operations["NutritionLogController_del"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/children/{childId}/nutrition-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NutritionLogController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/vaccines": {
         parameters: {
             query?: never;
@@ -642,6 +690,54 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/vaccines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminVaccineController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/vaccines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AdminVaccineController_update"];
+        trace?: never;
+    };
+    "/v1/admin/vaccine-schedule-items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AdminVaccineController_updateItem"];
         trace?: never;
     };
     "/v1/hospitals/nearby": {
@@ -770,6 +866,118 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ArticleController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/articles/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ArticleController_one"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminArticleController_list"];
+        put?: never;
+        post: operations["AdminArticleController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/articles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminArticleController_one"];
+        put?: never;
+        post?: never;
+        delete: operations["AdminArticleController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminArticleController_update"];
+        trace?: never;
+    };
+    "/v1/admin/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminController_stats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminController_users"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AdminController_update"];
         trace?: never;
     };
 }
@@ -940,6 +1148,16 @@ export interface components {
             headCircumferenceCm?: number;
             clientUpdatedAt: string;
         };
+        NutritionLogDto: {
+            date: string;
+            /** @enum {string} */
+            slot: "BREAKFAST" | "LUNCH" | "MORNING_SNACK" | "AFTERNOON_SNACK" | "DINNER";
+            /** @enum {string} */
+            eatenStatus: "FULL" | "PARTIAL" | "SKIPPED";
+            percent?: number;
+            notes?: string;
+            clientUpdatedAt: string;
+        };
         UpdateDto: {
             givenDate: string | null;
             facilityName?: string;
@@ -950,6 +1168,26 @@ export interface components {
             notes?: string;
             cardPhotoUrl?: string;
             clientUpdatedAt: string;
+        };
+        UpdateVaccineDto: {
+            name?: string;
+            disease?: string;
+            description?: string;
+            /** @enum {string} */
+            availability?: "GOVERNMENT_FREE" | "PRIVATE_PAID" | "BOTH";
+            isMandatory?: boolean;
+            priceMinBdt?: number | null;
+            priceMaxBdt?: number | null;
+            priceNote?: string | null;
+            sourceNote?: string;
+            verified?: boolean;
+        };
+        UpdateScheduleItemDto: {
+            suggestedAgeDays?: number;
+            minAgeDays?: number;
+            maxAgeDays?: number | null;
+            intervalFromPreviousDays?: number | null;
+            notes?: string | null;
         };
         KeysDto: {
             p256dh: string;
@@ -969,6 +1207,41 @@ export interface components {
         MealReminderDto: {
             timeOfDay: string;
             enabled: boolean;
+        };
+        CreateArticleDto: {
+            /** @enum {string} */
+            kind?: "ARTICLE" | "TIP" | "PAGE";
+            slug: string;
+            title: string;
+            summary: string;
+            body: string;
+            category: string;
+            ageMinMonths?: number | null;
+            ageMaxMonths?: number | null;
+            /** Format: uri */
+            coverUrl?: string | null;
+            /** @enum {string} */
+            status?: "DRAFT" | "PUBLISHED";
+        };
+        UpdateArticleDto: {
+            /** @enum {string} */
+            kind?: "ARTICLE" | "TIP" | "PAGE";
+            slug?: string;
+            title?: string;
+            summary?: string;
+            body?: string;
+            category?: string;
+            ageMinMonths?: number | null;
+            ageMaxMonths?: number | null;
+            /** Format: uri */
+            coverUrl?: string | null;
+            /** @enum {string} */
+            status?: "DRAFT" | "PUBLISHED";
+        };
+        UpdateUserDto: {
+            disabled?: boolean;
+            /** @enum {string} */
+            role?: "PARENT" | "NUTRITIONIST" | "ADMIN";
         };
     };
     responses: never;
@@ -2018,6 +2291,95 @@ export interface operations {
             };
         };
     };
+    NutritionLogController_summary: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+            };
+            header?: never;
+            path: {
+                childId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NutritionLogController_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                childId: string;
+                logId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NutritionLogDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NutritionLogController_del: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                childId: string;
+                logId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    NutritionLogController_list: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+                updatedSince?: string;
+            };
+            header?: never;
+            path: {
+                childId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     VaccinationController_catalogue: {
         parameters: {
             query?: never;
@@ -2088,6 +2450,69 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVaccineController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVaccineController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateVaccineDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVaccineController_updateItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateScheduleItemDto"];
             };
         };
         responses: {
@@ -2270,6 +2695,210 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["MealReminderDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArticleController_list: {
+        parameters: {
+            query?: {
+                kind?: "ARTICLE" | "TIP" | "PAGE";
+                category?: string;
+                ageMonths?: number;
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArticleController_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminArticleController_list: {
+        parameters: {
+            query?: {
+                status?: "DRAFT" | "PUBLISHED";
+                kind?: "ARTICLE" | "TIP" | "PAGE";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminArticleController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateArticleDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminArticleController_one: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminArticleController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminArticleController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateArticleDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_stats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_users: {
+        parameters: {
+            query?: {
+                q?: string;
+                role?: "PARENT" | "NUTRITIONIST" | "ADMIN";
+                disabled?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserDto"];
             };
         };
         responses: {
