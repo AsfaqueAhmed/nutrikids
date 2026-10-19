@@ -26,8 +26,15 @@ describe('admin', () => {
       .set(bearer(p.token))
       .send({ name: 'Rahim', dateOfBirth: '2024-03-01', gender: 'MALE' })
       .expect(201);
-    const res = await http().get('/v1/admin/stats').set(bearer(admin.token)).expect(200);
-    expect(res.body).toMatchObject({ totalUsers: 2, totalChildren: 1, disabledUsers: 0 });
+    const res = await http()
+      .get('/v1/admin/stats')
+      .set(bearer(admin.token))
+      .expect(200);
+    expect(res.body).toMatchObject({
+      totalUsers: 2,
+      totalChildren: 1,
+      disabledUsers: 0,
+    });
     expect(res.body.signupsByDay).toHaveLength(30);
     const today = res.body.signupsByDay.at(-1);
     expect(today.count).toBe(2);
@@ -38,11 +45,22 @@ describe('admin', () => {
     const admin = await makeAdmin(app);
     await registerAndLogin(app, 'alice@example.com');
     await registerAndLogin(app, 'bob@example.com');
-    const all = await http().get('/v1/admin/users').set(bearer(admin.token)).expect(200);
+    const all = await http()
+      .get('/v1/admin/users')
+      .set(bearer(admin.token))
+      .expect(200);
     expect(all.body.total).toBe(3);
-    const q = await http().get('/v1/admin/users?q=ALI').set(bearer(admin.token)).expect(200);
-    expect(q.body.items.map((u: { email: string }) => u.email)).toEqual(['alice@example.com']);
-    const admins = await http().get('/v1/admin/users?role=ADMIN').set(bearer(admin.token)).expect(200);
+    const q = await http()
+      .get('/v1/admin/users?q=ALI')
+      .set(bearer(admin.token))
+      .expect(200);
+    expect(q.body.items.map((u: { email: string }) => u.email)).toEqual([
+      'alice@example.com',
+    ]);
+    const admins = await http()
+      .get('/v1/admin/users?role=ADMIN')
+      .set(bearer(admin.token))
+      .expect(200);
     expect(admins.body.total).toBe(1);
   });
 
@@ -53,7 +71,9 @@ describe('admin', () => {
       .send({ email: 'kid@example.com', password: 'password123' })
       .expect(201);
     const { refreshToken } = reg.body as { refreshToken: string };
-    const list = await http().get('/v1/admin/users?q=kid').set(bearer(admin.token));
+    const list = await http()
+      .get('/v1/admin/users?q=kid')
+      .set(bearer(admin.token));
     const id = list.body.items[0].id as string;
 
     const off = await http()
@@ -91,7 +111,9 @@ describe('admin', () => {
       .expect(400);
     expect(self.body.code).toBe('CANNOT_MODIFY_SELF');
     await registerAndLogin(app, 'p@example.com');
-    const list = await http().get('/v1/admin/users?q=p@').set(bearer(admin.token));
+    const list = await http()
+      .get('/v1/admin/users?q=p@')
+      .set(bearer(admin.token));
     const up = await http()
       .patch(`/v1/admin/users/${list.body.items[0].id}`)
       .set(bearer(admin.token))

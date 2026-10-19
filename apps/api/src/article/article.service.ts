@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Article,
-  ArticleKind,
-  ArticleStatus,
-  Prisma,
-} from '@prisma/client';
+import { Article, ArticleKind, ArticleStatus, Prisma } from '@prisma/client';
 import { ApiError, conflict, notFound } from '../common/api-error';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -60,8 +55,12 @@ export class ArticleService {
     const and: Prisma.ArticleWhereInput[] = [];
     if (q.ageMonths !== undefined)
       and.push(
-        { OR: [{ ageMinMonths: null }, { ageMinMonths: { lte: q.ageMonths } }] },
-        { OR: [{ ageMaxMonths: null }, { ageMaxMonths: { gte: q.ageMonths } }] },
+        {
+          OR: [{ ageMinMonths: null }, { ageMinMonths: { lte: q.ageMonths } }],
+        },
+        {
+          OR: [{ ageMaxMonths: null }, { ageMaxMonths: { gte: q.ageMonths } }],
+        },
       );
     if (q.q)
       and.push({
@@ -126,7 +125,9 @@ export class ArticleService {
 
   async create(
     authorId: string,
-    dto: Required<Pick<ArticleInput, 'slug' | 'title' | 'summary' | 'body' | 'category'>> &
+    dto: Required<
+      Pick<ArticleInput, 'slug' | 'title' | 'summary' | 'body' | 'category'>
+    > &
       ArticleInput,
   ) {
     assertAgeRange(dto.ageMinMonths, dto.ageMaxMonths);
@@ -161,7 +162,10 @@ export class ArticleService {
     );
     if (dto.slug && dto.slug !== existing.slug) {
       if (await this.prisma.article.findUnique({ where: { slug: dto.slug } }))
-        throw conflict('SLUG_TAKEN', 'An article with this slug already exists');
+        throw conflict(
+          'SLUG_TAKEN',
+          'An article with this slug already exists',
+        );
     }
     let publishedAt: Date | null | undefined;
     if (dto.status === 'PUBLISHED' && !existing.publishedAt)

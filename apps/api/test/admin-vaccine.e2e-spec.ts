@@ -24,7 +24,14 @@ describe('admin vaccines', () => {
         availability: 'GOVERNMENT_FREE',
         sourceNote: 'EPI schedule',
         schedule: {
-          create: [{ doseNumber: 1, suggestedAgeDays: 0, minAgeDays: 0, maxAgeDays: 365 }],
+          create: [
+            {
+              doseNumber: 1,
+              suggestedAgeDays: 0,
+              minAgeDays: 0,
+              maxAgeDays: 365,
+            },
+          ],
         },
       },
       include: { schedule: true },
@@ -60,7 +67,11 @@ describe('admin vaccines', () => {
       .send({ priceMinBdt: 900 })
       .expect(400);
     expect(bad.body.code).toBe('INVALID_PRICE_RANGE');
-    await http().patch('/v1/admin/vaccines/00000000-0000-4000-8000-000000000000').set(a).send({}).expect(404);
+    await http()
+      .patch('/v1/admin/vaccines/00000000-0000-4000-8000-000000000000')
+      .set(a)
+      .send({})
+      .expect(404);
   });
 
   it('updates a schedule item and validates the age window', async () => {

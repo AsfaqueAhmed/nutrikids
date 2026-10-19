@@ -24,7 +24,12 @@ export function summarize(logs: LogLike[], plannedCount: number) {
     { logged: number; full: number; partial: number; skipped: number }
   >();
   for (const l of logs) {
-    const s = slots.get(l.slot) ?? { logged: 0, full: 0, partial: 0, skipped: 0 };
+    const s = slots.get(l.slot) ?? {
+      logged: 0,
+      full: 0,
+      partial: 0,
+      skipped: 0,
+    };
     s.logged++;
     if (l.eatenStatus === 'FULL') {
       full++;

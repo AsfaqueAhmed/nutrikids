@@ -83,11 +83,9 @@ export class NutritionLogService {
       },
     });
     if (holder && holder.id !== logId)
-      throw conflict(
-        'LOG_EXISTS',
-        'This meal slot already has a log',
-        { id: holder.id },
-      );
+      throw conflict('LOG_EXISTS', 'This meal slot already has a log', {
+        id: holder.id,
+      });
     const { apply, superseded } = resolveLww(
       existing,
       new Date(dto.clientUpdatedAt),
@@ -120,8 +118,12 @@ export class NutritionLogService {
     const rows = await this.prisma.nutritionLog.findMany({
       where: {
         childId,
-        ...(q.from ? { date: { gte: day(q.from), ...(q.to ? { lte: day(q.to) } : {}) } } : {}),
-        ...(q.updatedSince ? { updatedAt: { gt: new Date(q.updatedSince) } } : {}),
+        ...(q.from
+          ? { date: { gte: day(q.from), ...(q.to ? { lte: day(q.to) } : {}) } }
+          : {}),
+        ...(q.updatedSince
+          ? { updatedAt: { gt: new Date(q.updatedSince) } }
+          : {}),
       },
       orderBy: [{ date: 'asc' }, { createdAt: 'asc' }],
     });
@@ -130,7 +132,9 @@ export class NutritionLogService {
 
   async remove(userId: string, childId: string, logId: string) {
     await this.access.assertOwned(userId, childId);
-    await this.prisma.nutritionLog.deleteMany({ where: { id: logId, childId } });
+    await this.prisma.nutritionLog.deleteMany({
+      where: { id: logId, childId },
+    });
   }
 
   async summary(userId: string, childId: string, from: string, to: string) {

@@ -86,7 +86,11 @@ export class AuthService {
       throw unauthorized('INVALID_CREDENTIALS');
     }
     if (user.disabledAt)
-      throw new ApiError(403, 'ACCOUNT_DISABLED', 'This account has been disabled');
+      throw new ApiError(
+        403,
+        'ACCOUNT_DISABLED',
+        'This account has been disabled',
+      );
     return this.tokens.issue(user);
   }
 
@@ -155,7 +159,11 @@ export class AuthService {
           });
     }
     if (user.disabledAt)
-      throw new ApiError(403, 'ACCOUNT_DISABLED', 'This account has been disabled');
+      throw new ApiError(
+        403,
+        'ACCOUNT_DISABLED',
+        'This account has been disabled',
+      );
     return this.tokens.issue(user);
   }
 }

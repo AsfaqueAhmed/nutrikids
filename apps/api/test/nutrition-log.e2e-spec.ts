@@ -43,7 +43,9 @@ describe('nutrition logs', () => {
     expect(first.body.sync.superseded).toBe(false);
     await put(id, base).expect(200);
     const list = await http()
-      .get(`/v1/children/${child.id}/nutrition-logs?from=2025-06-01&to=2025-06-30`)
+      .get(
+        `/v1/children/${child.id}/nutrition-logs?from=2025-06-01&to=2025-06-30`,
+      )
       .set(auth)
       .expect(200);
     expect(list.body).toHaveLength(1);
@@ -52,9 +54,11 @@ describe('nutrition logs', () => {
   it('requires percent exactly when the meal was partly eaten', async () => {
     const { put } = await setup();
     await put(randomUUID(), { ...base, eatenStatus: 'PARTIAL' }).expect(400);
-    await put(randomUUID(), { ...base, eatenStatus: 'FULL', percent: 50 }).expect(
-      400,
-    );
+    await put(randomUUID(), {
+      ...base,
+      eatenStatus: 'FULL',
+      percent: 50,
+    }).expect(400);
     const ok = await put(randomUUID(), {
       ...base,
       eatenStatus: 'PARTIAL',
@@ -66,7 +70,9 @@ describe('nutrition logs', () => {
   it('keeps the newer write and flags the stale one as superseded', async () => {
     const { put } = await setup();
     const id = randomUUID();
-    await put(id, { ...base, clientUpdatedAt: '2025-06-10T12:00:00Z' }).expect(200);
+    await put(id, { ...base, clientUpdatedAt: '2025-06-10T12:00:00Z' }).expect(
+      200,
+    );
     const stale = await put(id, {
       ...base,
       eatenStatus: 'SKIPPED',
@@ -83,9 +89,10 @@ describe('nutrition logs', () => {
     const clash = await put(randomUUID(), base).expect(409);
     expect(clash.body.code).toBe('LOG_EXISTS');
     expect(clash.body.details.id).toBe(first);
-    const early = await put(randomUUID(), { ...base, date: '2023-01-01' }).expect(
-      400,
-    );
+    const early = await put(randomUUID(), {
+      ...base,
+      date: '2023-01-01',
+    }).expect(400);
     expect(early.body.code).toBe('DATE_BEFORE_BIRTH');
   });
 

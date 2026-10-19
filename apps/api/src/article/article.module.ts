@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AdminArticleController, ArticleController } from './article.controller';
+import {
+  AdminArticleController,
+  ArticleController,
+} from './article.controller';
 import { ArticleService } from './article.service';
 
 @Module({

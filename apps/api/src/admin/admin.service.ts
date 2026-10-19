@@ -6,7 +6,9 @@ import { PrismaService } from '../prisma/prisma.service';
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 
-type UserRow = Prisma.UserGetPayload<{ include: { _count: { select: { children: true } } } }>;
+type UserRow = Prisma.UserGetPayload<{
+  include: { _count: { select: { children: true } } };
+}>;
 const view = (u: UserRow) => ({
   id: u.id,
   email: u.email,
@@ -42,7 +44,9 @@ export class AdminService {
       this.prisma.user.count({ where: { disabledAt: { not: null } } }),
       this.prisma.child.count(),
       this.prisma.mealPlanEntry.count({ where: { createdBy: 'SYSTEM' } }),
-      this.prisma.childVaccination.count({ where: { givenDate: { not: null } } }),
+      this.prisma.childVaccination.count({
+        where: { givenDate: { not: null } },
+      }),
       this.prisma.$queryRaw<{ d: Date; c: bigint }[]>`
         SELECT date_trunc('day', "createdAt" AT TIME ZONE 'UTC')::date AS d, COUNT(*) AS c
         FROM "User" WHERE "createdAt" >= ${since} GROUP BY 1`,

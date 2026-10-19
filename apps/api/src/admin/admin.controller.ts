@@ -9,7 +9,13 @@ import {
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { type AuthUser, CurrentUser } from '../common/current-user';
 import { PageQuery } from '../common/page-query';
 import { Roles } from '../common/roles.decorator';
@@ -19,7 +25,9 @@ class UserListQuery extends PageQuery {
   @IsOptional() @IsString() @MaxLength(100) q?: string;
   @IsOptional() @IsEnum(Role) role?: Role;
   @IsOptional()
-  @Transform(({ value }) => (value === 'true' ? true : value === 'false' ? false : value))
+  @Transform(({ value }: { value: unknown }) =>
+    value === 'true' ? true : value === 'false' ? false : value,
+  )
   @IsBoolean()
   disabled?: boolean;
 }

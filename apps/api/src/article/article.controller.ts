@@ -33,7 +33,12 @@ import { ArticleService } from './article.service';
 class ListArticlesQuery extends PageQuery {
   @IsOptional() @IsEnum(ArticleKind) kind?: ArticleKind;
   @IsOptional() @IsString() @MaxLength(60) category?: string;
-  @IsOptional() @Type(() => Number) @IsInt() @Min(0) @Max(240) ageMonths?: number;
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(240)
+  ageMonths?: number;
   @IsOptional() @IsString() @MaxLength(100) q?: string;
 }
 class AdminListQuery extends PageQuery {
@@ -49,7 +54,9 @@ class CreateArticleDto {
   @IsString() @MinLength(1) @MaxLength(60) category!: string;
   @IsOptional() @IsInt() @Min(0) @Max(240) ageMinMonths?: number | null;
   @IsOptional() @IsInt() @Min(0) @Max(240) ageMaxMonths?: number | null;
-  @IsOptional() @IsUrl({ protocols: ['https'], require_protocol: true }) coverUrl?: string | null;
+  @IsOptional()
+  @IsUrl({ protocols: ['https'], require_protocol: true })
+  coverUrl?: string | null;
   @IsOptional() @IsEnum(ArticleStatus) status?: ArticleStatus;
 }
 class UpdateArticleDto extends PartialType(CreateArticleDto) {}
