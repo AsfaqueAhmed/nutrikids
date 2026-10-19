@@ -1411,6 +1411,166 @@
         ]
       }
     },
+    "/v1/children/{childId}/nutrition-logs/summary": {
+      "get": {
+        "operationId": "NutritionLogController_summary",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
+    "/v1/children/{childId}/nutrition-logs/{logId}": {
+      "put": {
+        "operationId": "NutritionLogController_put",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "logId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      },
+      "delete": {
+        "operationId": "NutritionLogController_del",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "logId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
+    "/v1/children/{childId}/nutrition-logs": {
+      "get": {
+        "operationId": "NutritionLogController_list",
+        "parameters": [
+          {
+            "name": "childId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedSince",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "NutritionLog"
+        ]
+      }
+    },
     "/v1/vaccines": {
       "get": {
         "operationId": "VaccinationController_catalogue",
@@ -1524,6 +1684,86 @@
         },
         "tags": [
           "Vaccination"
+        ]
+      }
+    },
+    "/v1/admin/vaccines": {
+      "get": {
+        "operationId": "AdminVaccineController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
+        ]
+      }
+    },
+    "/v1/admin/vaccines/{id}": {
+      "patch": {
+        "operationId": "AdminVaccineController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVaccineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
+        ]
+      }
+    },
+    "/v1/admin/vaccine-schedule-items/{id}": {
+      "patch": {
+        "operationId": "AdminVaccineController_updateItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScheduleItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminVaccine"
         ]
       }
     },
@@ -1774,6 +2014,314 @@
         },
         "tags": [
           "Notification"
+        ]
+      }
+    },
+    "/v1/articles": {
+      "get": {
+        "operationId": "ArticleController_list",
+        "parameters": [
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ARTICLE",
+                "TIP",
+                "PAGE"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 60,
+              "type": "string"
+            }
+          },
+          {
+            "name": "ageMonths",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 240,
+              "type": "number"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Article"
+        ]
+      }
+    },
+    "/v1/articles/{slug}": {
+      "get": {
+        "operationId": "ArticleController_one",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Article"
+        ]
+      }
+    },
+    "/v1/admin/articles": {
+      "get": {
+        "operationId": "AdminArticleController_list",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "PUBLISHED"
+              ]
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ARTICLE",
+                "TIP",
+                "PAGE"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminArticle"
+        ]
+      },
+      "post": {
+        "operationId": "AdminArticleController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArticleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminArticle"
+        ]
+      }
+    },
+    "/v1/admin/articles/{id}": {
+      "get": {
+        "operationId": "AdminArticleController_one",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminArticle"
+        ]
+      },
+      "patch": {
+        "operationId": "AdminArticleController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateArticleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminArticle"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminArticleController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminArticle"
+        ]
+      }
+    },
+    "/v1/admin/stats": {
+      "get": {
+        "operationId": "AdminController_stats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/v1/admin/users": {
+      "get": {
+        "operationId": "AdminController_users",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PARENT",
+                "NUTRITIONIST",
+                "ADMIN"
+              ]
+            }
+          },
+          {
+            "name": "disabled",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/v1/admin/users/{id}": {
+      "patch": {
+        "operationId": "AdminController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
         ]
       }
     }
@@ -2509,6 +3057,50 @@
           "clientUpdatedAt"
         ]
       },
+      "NutritionLogDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "string",
+            "enum": [
+              "BREAKFAST",
+              "LUNCH",
+              "MORNING_SNACK",
+              "AFTERNOON_SNACK",
+              "DINNER"
+            ]
+          },
+          "eatenStatus": {
+            "type": "string",
+            "enum": [
+              "FULL",
+              "PARTIAL",
+              "SKIPPED"
+            ]
+          },
+          "percent": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 99
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "clientUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "slot",
+          "eatenStatus",
+          "clientUpdatedAt"
+        ]
+      },
       "UpdateDto": {
         "type": "object",
         "properties": {
@@ -2551,6 +3143,84 @@
           "givenDate",
           "clientUpdatedAt"
         ]
+      },
+      "UpdateVaccineDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "disease": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "GOVERNMENT_FREE",
+              "PRIVATE_PAID",
+              "BOTH"
+            ]
+          },
+          "isMandatory": {
+            "type": "boolean"
+          },
+          "priceMinBdt": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "priceMaxBdt": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "priceNote": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "sourceNote": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "verified": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateScheduleItemDto": {
+        "type": "object",
+        "properties": {
+          "suggestedAgeDays": {
+            "type": "number",
+            "minimum": 0
+          },
+          "minAgeDays": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maxAgeDays": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "intervalFromPreviousDays": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          }
+        }
       },
       "KeysDto": {
         "type": "object",
@@ -2621,6 +3291,153 @@
           "timeOfDay",
           "enabled"
         ]
+      },
+      "CreateArticleDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "ARTICLE",
+              "TIP",
+              "PAGE"
+            ]
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 240
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 240
+          },
+          "coverUrl": {
+            "type": "string",
+            "nullable": true,
+            "format": "uri"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "PUBLISHED"
+            ]
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "summary",
+          "body",
+          "category"
+        ]
+      },
+      "UpdateArticleDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "enum": [
+              "ARTICLE",
+              "TIP",
+              "PAGE"
+            ],
+            "type": "string"
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "ageMinMonths": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 240
+          },
+          "ageMaxMonths": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 240
+          },
+          "coverUrl": {
+            "type": "string",
+            "nullable": true,
+            "format": "uri"
+          },
+          "status": {
+            "enum": [
+              "DRAFT",
+              "PUBLISHED"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "disabled": {
+            "type": "boolean"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PARENT",
+              "NUTRITIONIST",
+              "ADMIN"
+            ]
+          }
+        }
       }
     }
   }

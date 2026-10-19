@@ -44,3 +44,17 @@ Medical and nutrition reference data is **provisional** until a medical advisor 
 - Backend plan: [docs/superpowers/plans/2026-10-18-backend-phase0-1.md](docs/superpowers/plans/2026-10-18-backend-phase0-1.md)
 - Web app plan: [docs/superpowers/plans/2026-10-18-web-app-phase1.md](docs/superpowers/plans/2026-10-18-web-app-phase1.md)
 - WHO data sources: [data/who/README.md](data/who/README.md)
+
+## Phase 2 endpoints
+
+- **Nutrition logs:** `PUT|GET|DELETE /v1/children/:childId/nutrition-logs[/:logId]`, `GET .../nutrition-logs/summary` (what was actually eaten; the nutrition score stays plan-based).
+- **Articles:** `GET /v1/articles`, `GET /v1/articles/:slug` (published only); admin CRUD under `/v1/admin/articles`.
+- **Admin:** `GET /v1/admin/stats`, `GET /v1/admin/users`, `PATCH /v1/admin/users/:id` (disable/enable, role), `GET /v1/admin/vaccines`, `PATCH /v1/admin/vaccines/:id`, `PATCH /v1/admin/vaccine-schedule-items/:id`.
+
+Create the first admin by registering normally, then:
+
+```bash
+echo "UPDATE \"User\" SET role='ADMIN' WHERE email='you@example.com';" | pnpm --filter api exec prisma db execute --stdin
+```
+
+A disabled user cannot log in or refresh; an access token already issued stays valid until it expires (default 15 minutes).
