@@ -64,6 +64,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
             <div className="h-5 w-px bg-slate-200 mx-1 hidden sm:block" />
             <ChildSwitcher />
+            <Link
+              href="/learn"
+              className="text-xs font-semibold text-slate-700 hover:text-emerald-700 px-2 py-1.5 rounded hover:bg-slate-100 transition-colors hidden sm:inline"
+            >
+              Learn
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">

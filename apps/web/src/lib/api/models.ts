@@ -83,6 +83,7 @@ export type ArticleSummary = {
   coverUrl: string | null;
   status: ArticleStatus;
   publishedAt: string | null;
+  readingTimeMinutes?: number;
 };
 
 export type ArticleDetail = ArticleSummary & { body: string };

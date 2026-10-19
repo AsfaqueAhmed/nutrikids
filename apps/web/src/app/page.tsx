@@ -94,7 +94,20 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 space-y-2">
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/learn" className="hover:text-emerald-700">
+            Learn & Advice
+          </Link>
+          <span>•</span>
+          <Link href="/pages/terms" className="hover:text-emerald-700">
+            Terms of Service
+          </Link>
+          <span>•</span>
+          <Link href="/pages/privacy" className="hover:text-emerald-700">
+            Privacy Policy
+          </Link>
+        </div>
         <p>© 2026 NutriKids Platform. Guidance only, not medical advice.</p>
       </footer>
     </div>

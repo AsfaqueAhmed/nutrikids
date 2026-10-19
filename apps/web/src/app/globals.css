@@ -125,3 +125,73 @@ body {
   border-radius: 0.375rem;
   border-width: 1px;
 }
+
+/* Clean flat typography for markdown articles */
+.prose-flat {
+  max-width: 65ch;
+  color: #1e293b;
+  line-height: 1.7;
+}
+
+.prose-flat h1,
+.prose-flat h2,
+.prose-flat h3,
+.prose-flat h4 {
+  color: #0f172a;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+.prose-flat h1 { font-size: 1.75rem; }
+.prose-flat h2 { font-size: 1.375rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem; }
+.prose-flat h3 { font-size: 1.125rem; }
+
+.prose-flat p {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.prose-flat ul,
+.prose-flat ol {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  padding-left: 1.5em;
+}
+
+.prose-flat ul { list-style-type: disc; }
+.prose-flat ol { list-style-type: decimal; }
+
+.prose-flat li {
+  margin-top: 0.35em;
+  margin-bottom: 0.35em;
+}
+
+.prose-flat a {
+  color: #059669;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-flat a:hover {
+  color: #047857;
+}
+
+.prose-flat blockquote {
+  border-left: 3px solid #059669;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  color: #475569;
+  font-style: italic;
+}
+
+.prose-flat code {
+  font-family: monospace;
+  background-color: #f1f5f9;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+

@@ -125,6 +125,18 @@ export default function RegisterPage() {
           >
             {isSubmitting ? 'Creating account...' : 'Create Account'}
           </button>
+
+          <p className="text-xs text-center text-slate-500 mt-2">
+            By creating an account, you agree to our{' '}
+            <Link href="/pages/terms" className="underline text-slate-700 hover:text-emerald-700">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link href="/pages/privacy" className="underline text-slate-700 hover:text-emerald-700">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </form>
 
         <SocialButtons />

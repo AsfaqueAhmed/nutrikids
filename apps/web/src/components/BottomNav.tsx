@@ -24,10 +24,10 @@ export function BottomNav() {
       isActive: pathname.includes('/meals') || pathname.includes('/grocery'),
     },
     {
-      label: 'Growth',
-      href: activeChildId ? `${childPrefix}/growth` : '/onboarding',
-      icon: '📈',
-      isActive: pathname.includes('/growth') || pathname.includes('/nutrition'),
+      label: 'Learn',
+      href: '/learn',
+      icon: '📚',
+      isActive: pathname.startsWith('/learn'),
     },
     {
       label: 'Health',
